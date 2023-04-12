@@ -77,7 +77,12 @@ include 'back.php';
                                         </ul>
                                     </li>
                                     <li><a href="gallery.html">Gallery</a></li>
-                                    <li><a href="compte.php">Compte</a></li>
+                                    <li class="dropdown"><a>Compte</a>
+									    <ul>
+                                            <li><a href="compte.php">Connexion</a></li>
+                                            <li><a href="inscription.php">Inscription</a></li>
+                                        </ul>
+									</li>
                                 </ul>
                             </div>
                         </nav>
