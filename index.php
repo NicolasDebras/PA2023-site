@@ -1,137 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Projet Annuel 2023</title>
-<!-- Stylesheets -->
-<link href="css/bootstrap.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
-<!-- Responsive File -->
-<link href="css/responsive.css" rel="stylesheet">
-
-
-
-<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-<link rel="icon" href="images/favicon.png" type="image/x-icon">
-
-<!-- Responsive -->
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
-<!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-</head>
-
-<body>
-
-<div class="page-wrapper">
-    <!-- Preloader -->
-    <div class="preloader"><div class="icon"></div></div>
-
-    <!-- Main Header -->
-    <header class="main-header header-style-one">
-        <div class="header-container">
-            <!--Header Background Shape-->
-            <div class="bg-shape-box"><div class="bg-shape"></div></div>
-
-            <!-- Header Top -->
-            <div class="header-top">
-				<div class="inner clearfix">
-                    <div class="top-left">
-                        <div class="top-text">Bienvenue sur notre site</div>
-                    </div>
-   
-                </div>
-            </div>
-
-            <!-- Header Upper -->
-            <div class="header-upper">
-                <div class="inner-container clearfix">
-                    <!--Logo-->
-                    <!--<div class="logo-box">
-                        <div class="logo"><a href="index.html" title="Sintix - Digital Video Gaming and Consol HTML Template"><img src="images/logo.png" alt="Sintix - Digital Video Gaming and Consol HTML Template" title="Sintix - Digital Video Gaming and Consol HTML Template"></a></div>
-                    </div>-->
-
-                    <!--Nav Box-->
-                    <div class="nav-outer clearfix">
-                        <!--Mobile Navigation Toggler-->
-                        <div class="mobile-nav-toggler"><span class="icon flaticon-menu-2"></span></div>
-
-                        <!-- Main Menu -->
-                        <nav class="main-menu navbar-expand-md navbar-light">
-                            <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
-                                <ul class="navigation clearfix">
-                                    <li><a href="index.php">Home</a>
-                                    </li>
-									<li class="dropdown"><a href="about.html">A propos</a>
-                                        <ul>
-                                            <li><a href="about.html">A propos de nous</a></li>
-                                            <li><a href="team.html">Notre équipe</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown"><a href="#">Jeux</a>
-                                        <ul>
-                                            <li><a href="#">Tous les jeux</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="gallery.html">Gallery</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                </ul>
-                            </div>
-                        </nav>
-                        <!-- Main Menu End-->
-                        
-                        <!--<ul class="social-links clearfix">
-                            <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                            <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
-                            <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                            <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
-                        </ul>-->
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Header Upper-->
-        </div><!--End Header Container-->
-
-        <!-- Sticky Header  -->
-        <div class="sticky-header">
-            <div class="auto-container clearfix">
-                <!--Logo-->
-                <div class="logo pull-left">
-                    <a href="index.html" title=""><img src="" alt="" title=""></a>
-                </div>
-                <!--Right Col-->
-                <div class="pull-right">
-                    <!-- Main Menu -->
-                    <nav class="main-menu clearfix">
-                        <!--Keep This Empty / Menu will come through Javascript-->
-                    </nav><!-- Main Menu End-->
-                </div>
-            </div>
-        </div><!-- End Sticky Menu -->
-
-        <!-- Mobile Menu  -->
-        <div class="mobile-menu">
-            <div class="menu-backdrop"></div>
-            <div class="close-btn"><span class="icon flaticon-cancel"></span></div>
-            
-            <nav class="menu-box">
-                <div class="nav-logo"><a href="index.html"><img src="images/logo.png" alt="" title=""></a></div>
-                <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
-                <!--Social Links-->
-                <div class="social-links">
-                    <ul class="clearfix">
-                        <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                        <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
-                        <li><a href="#"><span class="fab fa-instagram"></span></a></li>
-                        <li><a href="#"><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div><!-- End Mobile Menu -->
-    </header>
-    <!-- End Main Header -->
+<?php
+	// on inclu le fichier entete.php
+    require_once('entete.php');
+?>
 
 
     <!-- Banner Section -->
@@ -356,7 +226,7 @@
         <div class="fact-counter">
             <div class="auto-container">
                 <!--Title-->
-                <div class="sec-title centered"><h2>Les chiffres</h2><span class="bottom-curve"></span></div>
+                <div class="sec-title centered"><h2>Numbers speaks</h2><span class="bottom-curve"></span></div>
 
                 <div class="row clearfix">
                     <!--Column-->
@@ -373,7 +243,7 @@
 
                     <!--Column-->
                     <div class="counter-column col-lg-3 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="800ms">
-                        <div class="count-box"><span class="count-text" data-speed="1500" data-stop="3">0</span></div>
+                        <div class="count-box"><span class="count-text" data-speed="1500" data-stop="16">0</span></div>
                         <h4 class="counter-title">team members</h4>
                     </div>
 
@@ -390,58 +260,7 @@
 
     </section>
 
-    <!-- Main Footer -->
-    <footer class="main-footer">
-        <div class="top-pattern-layer-dark"></div>
-
-        <div class="auto-container">
-            <!--Widgets Section-->
-            <div class="widgets-section">
-                <div class="row clearfix">
-                    
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="outer-container">
-                <!--Footer Bottom Shape-->
-                <div class="bottom-shape-box"><div class="bg-shape"></div></div>
-
-                <div class="auto-container">
-                    <!--Scroll to top-->
-                    <div class="scroll-to-top scroll-to-target" data-target="html"><span class="flaticon-up-arrow"></span></div>
-                    <!--Scroll to top-->
-                    <div class="row clearfix">
-                        <!-- Column -->
-                        <div class="column col-lg-6 col-md-12 col-sm-12">
-                            <div class="copyright"><span class="logo-icon"></span> &copy; Copyrights 2023 <a href="#">PA</a> - All Rights Reserved</div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-    </footer>
-	
-</div>
-<!--End pagewrapper-->
-
-<!--Scroll to top-->
-<div class="scroll-to-top scroll-to-target" data-target="html"><span class="flaticon-up-arrow"></span></div>
-
-<script src="js/jquery.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery-ui.js"></script>
-<script src="js/jquery.fancybox.js"></script>
-<script src="js/owl.js"></script>
-<script src="js/appear.js"></script>
-<script src="js/wow.js"></script>
-<script src="js/scrollbar.js"></script>
-<script src="js/script.js"></script>
-
-</body>
-</html>
+<?php
+	// on inclu le fichier footer.php
+    require_once('footer.php');
+?>
