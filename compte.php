@@ -1,4 +1,7 @@
 <?php
+	if (isset($_GET['error']) && $_GET['error'] == 1) {
+		echo '<script>alert("Mot de passe ou nom d\'utilisateur incorrect.");</script>';
+	}
 	// on inclu le fichier entete.php
     require_once('entete.php');
 ?> 

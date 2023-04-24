@@ -77,11 +77,24 @@ include 'back.php';
                                         </ul>
                                     </li>
                                     <li><a href="gallery.html">Gallery</a></li>
-                                    <li class="dropdown"><a>Compte</a>
-									    <ul>
-                                            <li><a href="compte.php">Connexion</a></li>
-                                            <li><a href="inscription.php">Inscription</a></li>
-                                        </ul>
+									<li class="dropdown"><a>Compte</a>
+										<ul>
+											<?php
+											// Si l'utilisateur est connecté
+											if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
+											?>
+												<li><a href="gestion_compte.php">Gestion du compte</a></li>
+												<li><a href="ami.php">Ami</a></li>
+												<li><a href="deconnexion.php">Déconnexion</a></li>
+											<?php
+											} else {
+											?>
+												<li><a href="compte.php">Connexion</a></li>
+												<li><a href="inscription.php">Inscription</a></li>
+											<?php
+											}
+											?>
+										</ul>
 									</li>
                                 </ul>
                             </div>
