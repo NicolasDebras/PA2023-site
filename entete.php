@@ -16,8 +16,8 @@ include 'back.php';
 
 
 
-<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-<link rel="icon" href="images/favicon.png" type="image/x-icon">
+<link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+<link rel="icon" href="images/logo.png" type="image/x-icon">
 
 <!-- Responsive -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,7 +40,7 @@ include 'back.php';
             <div class="header-top">
 				<div class="inner clearfix">
                     <div class="top-left">
-                        <div class="top-text">Bienvenue sur notre site</div>
+                        <div class="top-text">Bienvenue sur Masseney !</div>
                     </div>
    
                 </div>
@@ -51,7 +51,8 @@ include 'back.php';
                 <div class="inner-container clearfix">
                     <!--Logo-->
                     <div class="logo-box">
-                        <div class="logo"><a href="index.html" title="Sintix - Digital Video Gaming and Consol HTML Template"><img src="images/logo.png" alt="Sintix - Digital Video Gaming and Consol HTML Template" title="Sintix - Digital Video Gaming and Consol HTML Template"></a></div>
+						<div class="logo"><a href="index.php"><img src="images/logo.png" width="130" height="130"></a></div>
+
                     </div>
 
                     <!--Nav Box-->
@@ -65,10 +66,10 @@ include 'back.php';
                                 <ul class="navigation clearfix">
                                     <li><a href="index.php">Home</a>
                                     </li>
-									<li class="dropdown"><a href="about.html">A propos</a>
+									<li class="dropdown"><a href="about.php">A propos</a>
                                         <ul>
-                                            <li><a href="about.html">A propos de nous</a></li>
-                                            <li><a href="team.html">Notre équipe</a></li>
+                                            <li><a href="about.php">A propos de nous</a></li>
+                                            <li><a href="team.php">Notre équipe</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown"><a href="#">Jeux</a>
@@ -76,7 +77,7 @@ include 'back.php';
                                             <li><a href="#">Tous les jeux</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="gallery.html">Gallery</a></li>
+                                    <li><a href="gallery.php">Gallery</a></li>
 									<li class="dropdown"><a>Compte</a>
 										<ul>
 											<?php
@@ -112,7 +113,7 @@ include 'back.php';
             <div class="auto-container clearfix">
                 <!--Logo-->
                 <div class="logo pull-left">
-                    <a href="index.html" title=""><img src="images/sticky-logo.png" alt="" title=""></a>
+                    <a href="index.php" title=""><img src="images/logo.png" width="50" height="50"></a>
                 </div>
                 <!--Right Col-->
                 <div class="pull-right">
@@ -129,7 +130,7 @@ include 'back.php';
             <div class="close-btn"><span class="icon flaticon-cancel"></span></div>
             
             <nav class="menu-box">
-                <div class="nav-logo"><a href="index.html"><img src="images/logo.png" alt="" title=""></a></div>
+                <div class="nav-logo"><a href="index.php"><img src="images/logo.png" width="50" height="50"></a></div>
                 <div class="menu-outer"></div>
             </nav>
         </div><!-- End Mobile Menu -->
