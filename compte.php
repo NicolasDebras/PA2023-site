@@ -6,9 +6,20 @@
     require_once('entete.php');
 ?> 
     <!--Page Title-->
-    <section class="page-banner contact-banner">
-        <div class="top-pattern-layer-dark"></div>
+    <section class="page-banner" style="background-image:url(images/heading.jpg);">
+        <div class="top-pattern-layer"></div>
+
         <div class="banner-inner">
+            <div class="auto-container">
+                <div class="inner-container clearfix">
+                    <ul class="bread-crumb clearfix">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a>Compte</a></li>
+                        <li>Connexion</li>
+                    </ul>
+                    <h1>Connexion</h1>
+                </div>
+            </div>
         </div>
     </section>
     <!--End Page Banner-->

@@ -3,7 +3,7 @@
     require_once('entete.php');
 ?>
     <!--Page Title-->
-    <section class="page-banner" style="background-image:url(images/background/bg-banner-1.jpg);">
+    <section class="page-banner" style="background-image:url(images/heading.jpg);">
         <div class="top-pattern-layer"></div>
 
         <div class="banner-inner">
@@ -72,6 +72,7 @@
                         </div>
                     </div>
                 </div>
+				
 
             </div>
             

@@ -72,10 +72,7 @@ include 'back.php';
                                             <li><a href="team.php">Notre équipe</a></li>
                                         </ul>
                                     </li>
-                                    <li class="dropdown"><a href="#">Jeux</a>
-                                        <ul>
-                                            <li><a href="#">Tous les jeux</a></li>
-                                        </ul>
+                                    <li><a href="partie.php">Partie</a>
                                     </li>
                                     <li><a href="gallery.php">Gallery</a></li>
 									<li class="dropdown"><a>Compte</a>
@@ -85,6 +82,7 @@ include 'back.php';
 											if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
 											?>
 												<li><a href="gestion_compte.php">Gestion du compte</a></li>
+												<li><a href="creation_partie.php">Créer une partie</a></li>
 												<li><a href="ami.php">Ami</a></li>
 												<li><a href="deconnexion.php">Déconnexion</a></li>
 											<?php

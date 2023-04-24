@@ -1,0 +1,82 @@
+<?php
+	// on inclu le fichier entete.php
+    require_once('entete.php');
+	
+	// Récupère les parties depuis l'API
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_FOLLOWLOCATION => true,
+    ));
+
+    $response = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($http_status == 200) {
+        $parties = json_decode($response);
+    } else {
+        echo 'Unexpected HTTP status: ' . $http_status;
+        $parties = [];
+    }
+
+    // Ferme cURL
+    curl_close($curl);
+?>
+    <!--Page Title-->
+    <section class="page-banner" style="background-image:url(images/heading.jpg);">
+        <div class="top-pattern-layer"></div>
+
+        <div class="banner-inner">
+            <div class="auto-container">
+                <div class="inner-container clearfix">
+                    <ul class="bread-crumb clearfix">
+                        <li><a href="index.php">Home</a></li>
+                        <li>Parties</li>
+                    </ul>
+                    <h1>Parties</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End Page Banner-->
+
+	<!--Games Section-->
+    <section class="games-section">
+        <div class="top-pattern-layer"></div>
+        <div class="bottom-pattern-layer"></div>
+
+        <div class="auto-container">
+            <!--Title-->
+            <div class="sec-title centered"><h2>Les parties</h2><span class="bottom-curve"></span></div>
+
+			<div class="row clearfix">
+				<?php foreach ($parties->results as $party): ?>
+					<div class="game-block col-lg-4 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+						<div class="inner-box">
+							<div class="image-box">
+								<figure class="image"><a href="game-details.html"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
+								<div class="link-box"><a href="#" class="link-btn"> <span class="btn-title">Rejoindre la partie</span></a></div>
+							</div>
+							<div class="lower-content">
+								<h3><a href="game-details.html"><?php echo htmlspecialchars($party->title); ?></a></h3>
+								<div class="text">Créé par : <?php echo htmlspecialchars($party->Founder->username); ?></div>
+								<div class="post-info">
+									<ul class="clearfix">
+										<li><a href="#"><span class="icon flaticon-calendar-2"></span><?php echo date('F Y', strtotime($party->created_at)); ?></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
+        </div>
+        
+    </section>
+
+<?php
+	// on inclu le fichier footer.php
+    require_once('footer.php');
+?>
