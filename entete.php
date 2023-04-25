@@ -64,7 +64,7 @@ include 'back.php';
                         <nav class="main-menu navbar-expand-md navbar-light">
                             <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
                                 <ul class="navigation clearfix">
-                                    <li><a href="index.php">Home</a>
+                                    <li><a href="index.php">Accueil</a>
                                     </li>
 									<li class="dropdown"><a href="about.php">A propos</a>
                                         <ul>
@@ -83,6 +83,7 @@ include 'back.php';
 											?>
 												<li><a href="gestion_compte.php">Gestion du compte</a></li>
 												<li><a href="creation_partie.php">Créer une partie</a></li>
+												<li><a href="parties_user.php">Mes parties</a></li>
 												<li><a href="ami.php">Ami</a></li>
 												<li><a href="deconnexion.php">Déconnexion</a></li>
 											<?php

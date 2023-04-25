@@ -1,11 +1,14 @@
 <?php
-	// on inclu le fichier entete.php
+    // on inclu le fichier entete.php
     require_once('entete.php');
-	
-	// Récupère les parties depuis l'API
+
+    // Récupère le numéro de page depuis l'URL, ou utilise la valeur par défaut 1
+    $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+    // Récupère les parties depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/',
+      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/?page=' . $current_page,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_FOLLOWLOCATION => true,
     ));
@@ -72,7 +75,22 @@
 				<?php endforeach; ?>
 			</div>
 
-        </div>
+			<!-- Navigation -->
+			<div class="pagination-wrapper text-center">
+				<div class="d-inline-block">
+					<?php if ($current_page > 1): ?>
+						<button type="button" role="presentation" class="navigation-btn owl-prev" onclick="location.href='?page=<?php echo $current_page - 1; ?>'">
+							<span class="icon flaticon-triangle"></span> Précédent
+						</button>
+					<?php endif; ?>
+
+					<?php if ($current_page < ceil($parties->count / 9)): ?>
+						<button type="button" role="presentation" class="navigation-btn owl-next" onclick="location.href='?page=<?php echo $current_page + 1; ?>'">
+							Suivant <span class="icon flaticon-next"></span>
+						</button>
+					<?php endif; ?>
+				</div>
+			</div>
         
     </section>
 
