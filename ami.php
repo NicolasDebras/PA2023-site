@@ -1,7 +1,32 @@
 <?php
-	// on inclu le fichier entete.php
     require_once('entete.php');
+
+    $auth_token = $_COOKIE['auth_token'];
+    $user_id = $_COOKIE['user_id'];
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array(
+        'Authorization: Token ' . $auth_token
+      ),
+      CURLOPT_FOLLOWLOCATION => true,
+    ));
+
+    $response = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($http_status == 200) {
+        $friend_info = json_decode($response);
+    } else {
+        echo 'Unexpected HTTP status: ' . $http_status;
+        $friend_info = null;
+    }
+
+    curl_close($curl);
 ?>
+
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
         <div class="top-pattern-layer"></div>
@@ -11,8 +36,8 @@
                 <div class="inner-container clearfix">
                     <ul class="bread-crumb clearfix">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">Compte</a></li>
-                        <li>Ami</li>
+                        <li><a>Compte</a></li>
+                        <li>Amis</li>
                     </ul>
                     <h1>Mes amis</h1>
                 </div>
@@ -21,91 +46,88 @@
     </section>
     <!--End Page Banner-->
 
-    <!--Team Section-->
-    <section class="team-section team-page-section">
+<!--Page Content-->
+		<section class="team-section team-page-section">
+			<div class="auto-container">
+				<div class="row clearfix">
+					<?php if ($friend_info !== null): ?>
+						<div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style="margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
+							<div class="inner-box">
+								<figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/72074285?v=4" alt="" title=""></a></figure>
+								<div class="lower-box">
+									<h3><a href="#"><?php echo htmlspecialchars($friend_info->username); ?></a></h3>
+									<div class="designation"><?php echo htmlspecialchars($friend_info->first_name); ?> <?php echo htmlspecialchars($friend_info->last_name); ?></div>
+									<p>Email : <?php echo htmlspecialchars($friend_info->email); ?></p>
+									<p>Accepté : <?php echo $friend_info->commentaire ? 'Oui' : 'Non'; ?></p>
+								</div>
+							</div>
+						</div>
+					<?php else: ?>
+						<p class="text-center">Aucun ami trouvé.</p>
+					<?php endif; ?>
+				</div>
+			</div>
+		</section>
 
-        <div class="auto-container">
 
-            <div class="row clearfix">
-                <!--Team Block-->
-                <div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style= "margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
-                    <div class="inner-box">
-                        <figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/72074285?v=4" alt="" title=""></a></figure>
-                        <div class="lower-box">
-                            <h3><a href="#">Bastien LEUWERS</a></h3>
-                            <div class="designation">Développeur</div>
-                            <div class="social-links">
-                                <ul class="default-social-links clearfix">
-                                    <li><a href="https://github.com/CapDRAKE"><span class="fab fa-github"></span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Team Block-->
-                <div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style= "margin:auto;" data-wow-delay="200ms" data-wow-duration="1500ms">
-                    <div class="inner-box">
-                        <figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/47598797?v=4" alt="" title=""></a></figure>
-                        <div class="lower-box">
-                            <h3><a href="#">Nicolas DEBRAS</a></h3>
-                            <div class="designation">Developeur</div>
-                            <div class="social-links">
-                                <ul class="default-social-links clearfix">
-                                    <li><a href="https://github.com/NicolasDebras"><span class="fab fa-github"></span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Team Block-->
-                <div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style= "margin:auto;" data-wow-delay="400ms" data-wow-duration="1500ms">
-                    <div class="inner-box">
-                        <figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/79420105?v=4" alt="" title=""></a></figure>
-                        <div class="lower-box">
-                            <h3><a href="#">Noura BOUAISSA</a></h3>
-                            <div class="designation">Developeur</div>
-                            <div class="social-links">
-                                <ul class="default-social-links clearfix">
-                                    <li><a href="https://github.com/nourabouaissa"><span class="fab fa-github"></span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				
 
-            </div>
-            
-        </div>
-        
-    </section>
-	
 	<section class="contact-section">
-        <div class="auto-container">
-            <!--Title-->
-            <div class="sec-title centered"><h2>Ajouter un ami</h2><span class="bottom-curve"></span></div>
+		<div class="auto-container">
+			<!--Title-->
+			<div class="sec-title centered"><h2>Ajouter un ami</h2><span class="bottom-curve"></span></div>
 
-            <div class="form-box">
-                <div class="default-form contact-form">
-                    <form method="post" action="back.php" id="contact-form">
-                        <div class="row clearfix">                                    
-                            <div class="col-md-12 col-sm-12 form-group">
-                                <input type="text" name="username" placeholder="username" required="">
-                            </div>
+			<div class="form-box">
+				<div class="default-form contact-form">
+					<form method="post" action="add_friend.php">
+						<div class="row clearfix">
+							<div class="col-md-12 col-sm-12 form-group">
+								<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+								<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
+								<input type="text" name="friend_id" placeholder="ID de l'ami" required="">
+							</div>
 
-                            <div class="col-md-12 col-sm-12 form-group">
-                                <div class="text-center">
-                                    <button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Ajouter</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+							<div class="col-md-12 col-sm-12 form-group">
+								<div class="text-center">
+									<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Ajouter un ami</span></button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="contact-section">
+		<div class="auto-container">
+			<!--Title-->
+			<div class="sec-title centered"><h2>Accepter une demande d'ami</h2><span class="bottom-curve"></span></div>
+
+			<div class="form-box">
+				<div class="default-form contact-form">
+					<form method="post" action="accept_friend.php">
+						<div class="row clearfix">
+							<div class="col-md-12 col-sm-12 form-group">
+								<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+								<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
+								<input type="text" name="request_id" placeholder="ID de la demande" required="">
+							</div>
+
+							<div class="col-md-12 col-sm-12 form-group">
+								<div class="text-center">
+									<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter la demande</span></button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+    </div>
+</section>
 
 <?php
-	// on inclu le fichier footer.php
     require_once('footer.php');
 ?>
