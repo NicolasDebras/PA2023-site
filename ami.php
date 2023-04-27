@@ -65,7 +65,7 @@
 					<?php foreach ($user_info->friends as $friend): ?>
 						<div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style="margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
 							<div class="inner-box">
-								<figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/72074285?v=4" alt="" title=""></a></figure>
+								<figure class="image-box"><a href="#"><img src="<?php echo htmlspecialchars($friend->url_image); ?>" alt="" title=""></a></figure>
 								<div class="lower-box">
 									<h3><a href="#"><?php echo htmlspecialchars($friend->username); ?></a></h3>
 									<div class="designation">ID: <?php echo htmlspecialchars($friend->player_id); ?></div>
