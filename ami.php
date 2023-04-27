@@ -108,7 +108,7 @@
 		</div>
 	</section>
 
-	<section class="team-section team-page-section">
+	<section class="team-section contact-section"">
 		<div class="auto-container">
 			<div class="sec-title centered"><h2>Invitations</h2><span class="bottom-curve"></span></div>
 			<div class="row clearfix">

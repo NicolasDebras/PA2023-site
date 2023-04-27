@@ -4,7 +4,6 @@
     $auth_token = $_COOKIE['auth_token'];
     $party_id = $_GET['party_id'];
 
-    // Récupère les informations de la partie depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/' . $party_id . '/',
@@ -27,6 +26,15 @@
     }
     // Ferme cURL
     curl_close($curl);
+	
+	$joined = isset($_GET['joined']) ? $_GET['joined'] : null;
+	$error = isset($_GET['error']) ? $_GET['error'] : null;
+
+	if ($joined === 'true') {
+		echo '<div class="alert alert-success" role="alert">Demande acceptée !</div>';
+	} elseif ($joined === 'false') {
+		echo '<div class="alert alert-danger" role="alert">Erreur ! Petit malin ! Tu ne peux pas accepter deux fois une demande!</div>';
+	}
 ?>
 
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -109,6 +117,17 @@
 								<div class="lower-box">
 									<h3><a href="#"><?php echo htmlspecialchars($participant->player->username); ?></a></h3>
 									<div class="designation">ID: <?php echo htmlspecialchars($participant->player->id); ?></div>
+									<?php if ($user_id == $party_data->Founder->id): ?>
+										<div class="text-center">
+											<form method="post" action="controllers/accept_request.php">
+												<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+												<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
+												<input type="hidden" name="request_id" value="<?php echo htmlspecialchars($participant->id); ?>">
+												<input type="hidden" name="party_id" value="<?php echo $party_id; ?>">
+												<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter</span></button>
+											</form>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
