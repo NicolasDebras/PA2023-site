@@ -81,7 +81,7 @@ include 'back.php';
 											// Si l'utilisateur est connecté
 											if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
 											?>
-												<li><a href="gestion_compte.php">Gestion du compte</a></li>
+												<li><a href="gestion.php">Gestion du compte</a></li>
 												<li><a href="creation_partie.php">Créer une partie</a></li>
 												<li><a href="parties_user.php">Mes parties</a></li>
 												<li><a href="ami.php">Ami</a></li>
