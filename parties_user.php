@@ -1,33 +1,31 @@
 <?php
     // on inclu le fichier entete.php
     require_once('entete.php');
-	$auth_token = $_COOKIE['auth_token'];
-	$user_id = $_COOKIE['user_id'];
-
-    // Récupère le numéro de page depuis l'URL, ou utilise la valeur par défaut 1
-    $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+    $auth_token = $_COOKIE['auth_token'];
+    $user_id = $_COOKIE['user_id'];
 
     // Récupère les parties depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/' . $user_id . '/?page=' . $current_page,
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTPHEADER => array(
-          'Authorization: Token ' . $auth_token,
-          'Content-Type: application/json'
-      ),
+        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/myparty/' . $user_id . '/',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Token ' . $auth_token,
+            'Content-Type: application/json'
+        ),
     ));
 
     $response = curl_exec($curl);
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-	if ($http_status == 200) {
-		$parties = json_decode($response, false);
-	} else {
-		echo 'Unexpected HTTP status: ' . $http_status;
-		$parties = (object) array('results' => [], 'count' => 0);
-	}
+    if ($http_status == 200) {
+        $response_data = json_decode($response, false);
+        $parties = $response_data->my_parties;
+    } else {
+        echo 'Unexpected HTTP status: ' . $http_status;
+        $parties = [];
+    }
     // Ferme cURL
     curl_close($curl);
 ?>
@@ -58,25 +56,32 @@
         <!--Title-->
         <div class="sec-title centered"><h2>Les parties</h2><span class="bottom-curve"></span></div>
 
-        <div class="row clearfix">
-            <div class="game-block col-lg-4 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <figure class="image"><a href="game-details.html"><img src="<?php echo htmlspecialchars($parties->url_image); ?>" alt="" title=""></a></figure>
-                        <div class="link-box"><a href="#" class="link-btn"> <span class="btn-title">Accéder</span></a></div>
-                    </div>
-                    <div class="lower-content">
-                        <h3><a href="game-details.html"><?php echo htmlspecialchars($parties->title); ?></a></h3>
-                        <div class="text">Créé par : <?php echo htmlspecialchars($parties->Founder->username); ?></div>
-                        <div class="post-info">
-                            <ul class="clearfix">
-                                <li><a href="#"><span class="icon flaticon-calendar-2"></span><?php echo date('F Y', strtotime($parties->created_at)); ?></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="row clearfix">
+			<?php if (!empty($parties)): ?>
+				<?php foreach ($parties as $party): ?>
+					<div class="game-block col-lg-4 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+						<div class="inner-box">
+							<div class="image-box">
+								<figure class="image"><a href="game-details.html"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
+								<div class="link-box"><a href="#" class="link-btn"> <span class="btn-title">Accéder</span></a></div>
+							</div>
+							<div class="lower-content">
+								<h3><a href="game-details.html"><?php echo htmlspecialchars($party->title); ?></a></h3>
+								<div class="text">Créé par : <?php echo htmlspecialchars($party->Founder->username); ?></div>
+								<div class="post-info">
+									<ul class="clearfix">
+										<li><a href="#"><span class="icon flaticon-calendar-2"></span><?php echo date('F Y', strtotime($party->created_at)); ?></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<p class="text-center">Aucune partie trouvée.</p>
+			<?php endif; ?>
+		</div>
+
 
         <!-- Navigation -->
         <div class="pagination-wrapper text-center">
