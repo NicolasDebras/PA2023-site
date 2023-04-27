@@ -38,7 +38,7 @@
                             </div>
                     
                             <div class="col-md-12 col-sm-12 form-group">
-                                <input type="text" name="password" placeholder="Mot de passe" required="">
+                                <input type="password" name="password" placeholder="Mot de passe" required="">
                             </div>
 
                             <div class="col-md-12 col-sm-12 form-group">
