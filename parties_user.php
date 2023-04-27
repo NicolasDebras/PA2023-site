@@ -18,13 +18,13 @@
             'Content-Type: application/json'
         ),
     ));
-
+	
     $response = curl_exec($curl);
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($http_status == 200) {
         $response_data = json_decode($response, false);
-        $parties = $response_data->my_parties;
+        $parties = $response_data->results;
         $total_count = $response_data->count;
     } else {
         echo 'Unexpected HTTP status: ' . $http_status;
