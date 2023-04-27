@@ -17,8 +17,8 @@ if (isset($_POST['submit-form'])) {
     $response = curl_exec($curl);
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    if ($http_status == 200) {
-        header('Location: friend_page.php?message=success');
+    if ($http_status == 201) {
+        header('Location: ami.php');
     } else {
         header('Location: friend_page.php?message=error&status=' . $http_status);
     }

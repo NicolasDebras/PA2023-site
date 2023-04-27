@@ -1,30 +1,30 @@
 <?php
-    require_once('entete.php');
+	require_once('entete.php');
 
-    $auth_token = $_COOKIE['auth_token'];
-    $user_id = $_COOKIE['user_id'];
+	$auth_token = $_COOKIE['auth_token'];
+	$user_id = $_COOKIE['user_id'];
 
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_HTTPHEADER => array(
-        'Authorization: Token ' . $auth_token
-      ),
-      CURLOPT_FOLLOWLOCATION => true,
-    ));
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+	  CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+	  CURLOPT_RETURNTRANSFER => true,
+	  CURLOPT_HTTPHEADER => array(
+		'Authorization: Token ' . $auth_token
+	  ),
+	  CURLOPT_FOLLOWLOCATION => true,
+	));
 
-    $response = curl_exec($curl);
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+	$response = curl_exec($curl);
+	$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    if ($http_status == 200) {
-        $friend_info = json_decode($response);
-    } else {
-        echo 'Unexpected HTTP status: ' . $http_status;
-        $friend_info = null;
-    }
+	if ($http_status == 200) {
+		$user_info = json_decode($response);
+	} else {
+		echo 'Unexpected HTTP status: ' . $http_status;
+		$user_info = null;
+	}
 
-    curl_close($curl);
+	curl_close($curl);
 ?>
 
     <!--Page Title-->
@@ -46,31 +46,29 @@
     </section>
     <!--End Page Banner-->
 
-<!--Page Content-->
-		<section class="team-section team-page-section">
-			<div class="auto-container">
-				<div class="row clearfix">
-					<?php if ($friend_info !== null): ?>
+	<!--Page Content-->
+	<section class="team-section team-page-section">
+		<div class="auto-container">
+			<div class="row clearfix">
+				<?php if ($user_info !== null && !empty($user_info->friends)): ?>
+					<?php foreach ($user_info->friends as $friend): ?>
 						<div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style="margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
 							<div class="inner-box">
 								<figure class="image-box"><a href="#"><img src="https://avatars.githubusercontent.com/u/72074285?v=4" alt="" title=""></a></figure>
 								<div class="lower-box">
-									<h3><a href="#"><?php echo htmlspecialchars($friend_info->username); ?></a></h3>
-									<div class="designation"><?php echo htmlspecialchars($friend_info->first_name); ?> <?php echo htmlspecialchars($friend_info->last_name); ?></div>
-									<p>Email : <?php echo htmlspecialchars($friend_info->email); ?></p>
-									<p>Accepté : <?php echo $friend_info->commentaire ? 'Oui' : 'Non'; ?></p>
+									<h3><a href="#"><?php echo htmlspecialchars($friend->username); ?></a></h3>
+									<div class="designation">ID: <?php echo htmlspecialchars($friend->id); ?></div>
 								</div>
 							</div>
 						</div>
-					<?php else: ?>
-						<p class="text-center">Aucun ami trouvé.</p>
-					<?php endif; ?>
-				</div>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<p class="text-center">Aucun ami trouvé.</p>
+				<?php endif; ?>
 			</div>
-		</section>
-
-
-
+		</div>
+	</section>
+	
 	<section class="contact-section">
 		<div class="auto-container">
 			<!--Title-->
