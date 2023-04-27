@@ -39,12 +39,12 @@ if (isset($_POST['submit-form'])) {
         curl_close($curl);
 
         if ($http_status == 201) {
-            header('Location: ami.php');
+            header('Location: ../ami.php');
         } else {
-            header('Location: ami.php?message=error&status=' . $http_status);
+            header('Location: ../ami.php?message=error&status=' . $http_status);
         }
     } else {
-        header('Location: ami.php?message=error&status=' . $http_status);
+        header('Location: ../ami.php?message=error&status=' . $http_status);
     }
 }
 ?>

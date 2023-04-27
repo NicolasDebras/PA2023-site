@@ -3,7 +3,7 @@
 		echo '<script>alert("Mot de passe ou nom d\'utilisateur incorrect.");</script>';
 	}
 	// on inclu le fichier entete.php
-    require_once('entete.php');
+    require_once('includes/entete.php');
 ?> 
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -23,15 +23,15 @@
         </div>
     </section>
     <!--End Page Banner-->
-	<!--Créer une partie Section-->
-	<section class="create-game-section">
+	<!--Créer une partie Section création partie-->
+	<section class="contact-section">
 		<div class="auto-container">
 			<!--Title-->
 			<div class="sec-title centered"><h2>Créer une partie</h2><span class="bottom-curve"></span></div>
 
 			<div class="form-box">
-				<div class="default-form create-game-form">
-					<form method="post" action="create_game.php" id="create-game-form" enctype="multipart/form-data">
+				<div class="default-form contact-form">
+					<form method="post" action="controllers/create_game.php" id="create-game-form" enctype="multipart/form-data">
 						<div class="row clearfix">
 							<div class="col-md-12 col-sm-12 form-group">
 								<input type="text" name="title" placeholder="Titre de la partie" required="">
@@ -43,6 +43,7 @@
 							</div>
 
 							<!-- Si nécessaire, ajoutez des champs pour d'autres informations, par exemple la date de début, le nombre de participants, etc. -->
+							<!-- Conclu que pas nécessaire pour le moment. On verra plus tard-->
 
 							<div class="col-md-12 col-sm-12 form-group">
 								<div class="text-center">
@@ -58,5 +59,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

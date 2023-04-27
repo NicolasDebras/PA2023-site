@@ -1,6 +1,6 @@
 <?php
-    // on inclu le fichier entete.php
-    require_once('entete.php');
+	// on inclu le fichier entete.php
+    require_once('includes/entete.php');
 
     // Récupère le numéro de page depuis l'URL, ou utilise la valeur par défaut 1
     $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -25,6 +25,15 @@
 
     // Ferme cURL
     curl_close($curl);
+	
+	$joined = isset($_GET['joined']) ? $_GET['joined'] : null;
+	$error = isset($_GET['error']) ? $_GET['error'] : null;
+
+	if ($joined === 'true') {
+		echo '<div class="alert alert-success" role="alert">Vous avez rejoint la partie</div>';
+	} elseif ($joined === 'false') {
+		echo '<div class="alert alert-danger" role="alert">Erreur ! Petit malin ! On ne peut pas rentrer dans une partie si on y est déjà !</div>';
+	}
 ?>
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -59,7 +68,11 @@
 						<div class="inner-box">
 							<div class="image-box">
 								<figure class="image"><a href="game-details.html"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
-								<div class="link-box"><a href="#" class="link-btn"> <span class="btn-title">Rejoindre la partie</span></a></div>
+								<div class="link-box">
+									<a href="controllers/join_party.php?party_id=<?php echo htmlspecialchars($party->id); ?>&user_id=<?php echo $_COOKIE['user_id']; ?>" class="link-btn">
+										<span class="btn-title">Rejoindre la partie</span>
+									</a>
+								</div>
 							</div>
 							<div class="lower-content">
 								<h3><a href="game-details.html"><?php echo htmlspecialchars($party->title); ?></a></h3>
@@ -96,5 +109,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

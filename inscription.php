@@ -1,6 +1,6 @@
 <?php
-    // on inclu le fichier entete.php
-    require_once('entete.php');
+	// on inclu le fichier entete.php
+    require_once('includes/entete.php');
 ?>
 
 <!--Page Title-->
@@ -28,7 +28,7 @@
 
         <div class="form-box">
             <div class="default-form signup-form">
-                <form method="post" action="register.php" id="signup-form">
+                <form method="post" action="controllers/register.php" id="signup-form">
                     <div class="row clearfix">
                         <div class="col-md-12 col-sm-12 form-group">
                             <input type="text" name="username" placeholder="Nom d'utilisateur" required="">
@@ -63,6 +63,6 @@
 </section>
 
 <?php
-    // on inclu le fichier footer.php
-    require_once('footer.php');
+	// on inclu le fichier footer.php
+    require_once('includes/footer.php');
 ?>

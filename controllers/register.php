@@ -24,7 +24,7 @@
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($http_status == 201) {
-            header('Location: login.php');
+            header('Location: ../compte.php');
         } else {
             echo 'Unexpected HTTP status: ' . $http_status;
         }
@@ -32,6 +32,6 @@
         // Ferme cURL
         curl_close($curl);
     } else {
-        header('Location: inscription.php');
+        header('Location: ../inscription.php');
     }
 ?>

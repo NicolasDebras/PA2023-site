@@ -1,6 +1,6 @@
 <?php
-    // on inclu le fichier entete.php
-    require_once('entete.php');
+	// on inclu le fichier entete.php
+    require_once('includes/entete.php');
     $auth_token = $_COOKIE['auth_token'];
     $user_id = $_COOKIE['user_id'];
 
@@ -68,8 +68,8 @@
 					<div class="game-block col-lg-4 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="inner-box">
 							<div class="image-box">
-								<figure class="image"><a href="game-details.html"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
-								<div class="link-box"><a href="#" class="link-btn"> <span class="btn-title">Accéder</span></a></div>
+								<figure class="image"><a href=""><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
+								<div class="link-box"><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>" class="link-btn"> <span class="btn-title">Accéder</span></a></div>
 							</div>
 							<div class="lower-content">
 								<h3><a href="game-details.html"><?php echo htmlspecialchars($party->title); ?></a></h3>
@@ -111,5 +111,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

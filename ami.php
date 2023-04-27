@@ -1,5 +1,6 @@
 <?php
-	require_once('entete.php');
+	// on inclu le fichier entete.php
+    require_once('includes/entete.php');
 
 	$auth_token = $_COOKIE['auth_token'];
 	$user_id = $_COOKIE['user_id'];
@@ -87,7 +88,7 @@
 
 			<div class="form-box">
 				<div class="default-form contact-form">
-					<form method="post" action="add_friend.php">
+					<form method="post" action="controllers/add_friend.php">
 						<div class="row clearfix">
 							<div class="col-md-12 col-sm-12 form-group">
 								<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
@@ -121,7 +122,7 @@
 										<h3><a href="#"><?php echo htmlspecialchars($invitation->username); ?></a></h3>
 										<div class="designation">ID: <?php echo htmlspecialchars($invitation->player_id); ?></div>
 										<div class="text-center">
-											<form method="post" action="accept_friend.php">
+											<form method="post" action="controllers/accept_friend.php">
 												<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
 												<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
 												<input type="hidden" name="request_id" value="<?php echo htmlspecialchars($invitation->asc_id); ?>">
@@ -144,5 +145,6 @@
 </section>
 
 <?php
-    require_once('footer.php');
+	// on inclu le fichier footer.php
+    require_once('includes/footer.php');
 ?>

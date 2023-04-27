@@ -1,7 +1,7 @@
 <?php
 //Ce code m'a fait suer pour rien...
-    // on inclu le fichier entete.php
-    require_once('entete.php');
+	// on inclu le fichier entete.php
+    require_once('includes/entete.php');
 
     // Récupérer les cookies pour le token et l'id de l'utilisateur
     $user_id = $_COOKIE['user_id'];
@@ -84,5 +84,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

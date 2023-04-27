@@ -1,6 +1,6 @@
 <?php
 	// on inclu le fichier entete.php
-    require_once('entete.php');
+    require_once('includes/entete.php');
 ?>
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -82,5 +82,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

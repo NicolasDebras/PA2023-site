@@ -33,12 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie("user_id", $user_id, time() + (86400 * 30), "/");
 
         // Redirige vers index.php
-        header("Location: index.php");
+        header("Location: ../index.php");
 
         exit;
     } else {
         // Redirige vers la page de connexion avec une variable GET pour indiquer l'erreur
-        header("Location: compte.php?error=1");
+        header("Location: ../compte.php?error=1");
         exit;
     }
 
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token']) && isset($_COOKIE['user_id']) && !empty($_COOKIE['user_id'])) {
     $auth_token = $_COOKIE['auth_token'];
     $user_id = $_COOKIE['user_id'];
-    echo $auth_token;
+    //echo $auth_token;
 
     // Initialise cURL pour la requête avec le token d'authentification
     $curl = curl_init();
@@ -69,7 +69,7 @@ if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token']) && isset($_C
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($http_status == 200) {
-        echo $response;
+        //echo $response;
     } else {
         echo 'Unexpected HTTP status: ' . $http_status;
     }

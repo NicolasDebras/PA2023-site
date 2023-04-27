@@ -3,7 +3,7 @@
 		echo '<script>alert("Mot de passe ou nom d\'utilisateur incorrect.");</script>';
 	}
 	// on inclu le fichier entete.php
-    require_once('entete.php');
+    require_once('includes/entete.php');
 ?> 
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -31,7 +31,7 @@
 
             <div class="form-box">
                 <div class="default-form contact-form">
-                    <form method="post" action="back.php" id="contact-form">
+                    <form method="post" action="controllers/back.php" id="contact-form">
                         <div class="row clearfix">                                    
                             <div class="col-md-12 col-sm-12 form-group">
                                 <input type="text" name="username" placeholder="username" required="">
@@ -55,5 +55,5 @@
 
 <?php
 	// on inclu le fichier footer.php
-    require_once('footer.php');
+    require_once('includes/footer.php');
 ?>

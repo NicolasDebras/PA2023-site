@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Cloudinary\Cloudinary;
 
@@ -57,7 +57,7 @@ if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($http_status == 201) {
-        header('Location: partie.php');
+        header('Location: ../partie.php');
     } else {
         echo 'Unexpected HTTP status: ' . $http_status . '<br>';
 		echo 'Response: ' . $response;
