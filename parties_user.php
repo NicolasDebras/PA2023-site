@@ -4,10 +4,13 @@
     $auth_token = $_COOKIE['auth_token'];
     $user_id = $_COOKIE['user_id'];
 
+    // Récupère le numéro de page depuis l'URL, ou utilise la valeur par défaut 1
+    $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
     // Récupère les parties depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/myparty/' . $user_id . '/',
+        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/myparty/' . $user_id . '/?page=' . $current_page,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
@@ -22,13 +25,16 @@
     if ($http_status == 200) {
         $response_data = json_decode($response, false);
         $parties = $response_data->my_parties;
+        $total_count = $response_data->count;
     } else {
         echo 'Unexpected HTTP status: ' . $http_status;
         $parties = [];
+        $total_count = 0;
     }
     // Ferme cURL
     curl_close($curl);
 ?>
+
     <!--Page Title-->
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
         <div class="top-pattern-layer"></div>
@@ -83,22 +89,22 @@
 		</div>
 
 
-        <!-- Navigation -->
-        <div class="pagination-wrapper text-center">
-            <div class="d-inline-block">
-                <?php if ($current_page > 1): ?>
-                    <button type="button" role="presentation" class="navigation-btn owl-prev" onclick="location.href='?page=<?php echo $current_page - 1; ?>'">
-                        <span class="icon flaticon-triangle"></span> Précédent
-                    </button>
-                <?php endif; ?>
+		<div class="pagination-wrapper text-center">
+			<div class="d-inline-block">
+				<?php if ($current_page > 1): ?>
+					<button type="button" role="presentation" class="navigation-btn owl-prev" onclick="location.href='?page=<?php echo $current_page - 1; ?>'">
+						<span class="icon flaticon-triangle"></span> Précédent
+					</button>
+				<?php endif; ?>
 
-                <?php if ($current_page < ceil($parties->count / 9)): ?>
-                    <button type="button" role="presentation" class="navigation-btn owl-next" onclick="location.href='?page=<?php echo $current_page + 1; ?>'">
-                        Suivant <span class="icon flaticon-next"></span>
-                    </button>
-                <?php endif; ?>
-            </div>
-        </div>
+				<?php if ($current_page < ceil($total_count / 9)): ?>
+					<button type="button" role="presentation" class="navigation-btn owl-next" onclick="location.href='?page=<?php echo $current_page + 1; ?>'">
+						Suivant <span class="icon flaticon-next"></span>
+					</button>
+				<?php endif; ?>
+			</div>
+		</div>
+
 
     </div>
 </section>
