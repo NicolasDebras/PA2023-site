@@ -21,13 +21,13 @@
 </section>
 <!--End Page Banner-->
 
-<section class="signup-section">
+<section class="contact-section">
     <div class="auto-container">
         <!--Title-->
         <div class="sec-title centered"><h2>S'inscrire</h2><span class="bottom-curve"></span></div>
 
         <div class="form-box">
-            <div class="default-form signup-form">
+            <div class="default-form contact-form">
                 <form method="post" action="controllers/register.php" id="signup-form">
                     <div class="row clearfix">
                         <div class="col-md-12 col-sm-12 form-group">
