@@ -14,6 +14,8 @@
     ));
 
     $response = curl_exec($curl);
+	echo $response;
+	print curl_error($curl);
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($http_status == 200) {
