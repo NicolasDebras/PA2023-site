@@ -37,6 +37,7 @@
 	}
 ?>
 
+
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
         <div class="top-pattern-layer"></div>
 
@@ -80,6 +81,16 @@
 				</div>
 			</div>
 		</div>
+	</section>
+	
+	<section>
+	
+			<div id="chat">
+				<div id="message-container"></div>
+				<input type="text" id="message-input" placeholder="Entrez votre message ici">
+				<button id="send-button">Envoyer</button>
+			</div>
+	
 	</section>
 	
 	<section class="team-section team-page-section">
@@ -138,6 +149,12 @@
 			</div>
 		</div>
 	</section>
+	
+	<script>
+		// Initialise le chat et se connecte au serveur WebSocket
+		var chat = new Chat('ws://' + window.location.host + '/ws/chat/{{ room_name }}/');
+		chat.connect();
+	</script>
 	
 <?php
 	// on inclu le fichier footer.php
