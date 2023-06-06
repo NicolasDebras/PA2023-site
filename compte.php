@@ -2,6 +2,7 @@
 	if (isset($_GET['error']) && $_GET['error'] == 1) {
 		echo '<script>alert("Mot de passe ou nom d\'utilisateur incorrect.");</script>';
 	}
+    //Ceci est un test pour mon git
 	// on inclu le fichier entete.php
     require_once('includes/entete.php');
 ?> 
