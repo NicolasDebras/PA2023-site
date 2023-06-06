@@ -92,6 +92,12 @@
 			</div>
 	
 	</section>
+
+	<section>
+		<div class="auto-container">
+			<div class="sec-title centered"><h2>Chat direct</h2><span class="bottom-curve"></span></div>
+		</div>
+	</section>
 	
 	<section class="team-section team-page-section">
 		<div class="auto-container">
