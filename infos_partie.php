@@ -92,12 +92,6 @@
 			</div>
 	
 	</section>
-
-	<section>
-		<div class="auto-container">
-			<div class="sec-title centered"><h2>Chat direct</h2><span class="bottom-curve"></span></div>
-		</div>
-	</section>
 	
 	<section class="team-section team-page-section">
 		<div class="auto-container">
@@ -156,11 +150,49 @@
 		</div>
 	</section>
 	
-	<script>
-		// Initialise le chat et se connecte au serveur WebSocket
-		var chat = new Chat('ws://' + window.location.host + '/ws/chat/{{ room_name }}/');
-		chat.connect();
-	</script>
+    <section>
+        <div id="chat">
+            <div id="message-container"></div>
+            <input type="text" id="message-input" placeholder="Entrez votre message ici">
+            <button id="send-button">Envoyer</button>
+        </div>
+    </section>
+
+    <section>
+        <div class="auto-container">
+            <div class="sec-title centered"><h2>Chat direct</h2><span class="bottom-curve"></span></div>
+        </div>
+    </section>
+
+    <script>
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/room_name/');
+
+        chatSocket.onopen = function(e) {
+            console.log("Connection avec le chat ouverte");
+        };
+
+        chatSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            document.querySelector('#message-container').textContent += (message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#send-button').onclick = function(e) {
+            var messageInputDom = document.querySelector('#message-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'type': 'chat_message',
+                'message': message
+            }));
+
+            messageInputDom.value = '';
+        };
+    </script>
 	
 <?php
 	// on inclu le fichier footer.php
