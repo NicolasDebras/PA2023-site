@@ -83,16 +83,6 @@
 		</div>
 	</section>
 	
-	<section>
-	
-			<div id="chat">
-				<div id="message-container"></div>
-				<input type="text" id="message-input" placeholder="Entrez votre message ici">
-				<button id="send-button">Envoyer</button>
-			</div>
-	
-	</section>
-	
 	<section class="team-section team-page-section">
 		<div class="auto-container">
 			<div class="sec-title centered"><h2>Participants acceptés</h2><span class="bottom-curve"></span></div>
@@ -150,49 +140,63 @@
 		</div>
 	</section>
 	
-    <section>
-        <div id="chat">
-            <div id="message-container"></div>
-            <input type="text" id="message-input" placeholder="Entrez votre message ici">
-            <button id="send-button">Envoyer</button>
-        </div>
-    </section>
+	<!-- Chat Section -->
+	<section class="contact-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="card-title">Chat direct</h4>
+						</div>
+						<div id="message-container" class="card-body chat-body" style="height: 300px; overflow-y: auto;">
+						</div>
+						<div class="card-footer">
+							<div class="input-group">
+								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici">
+								<div class="input-group-append">
+									<button id="send-button" class="btn btn-primary">Envoyer</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <section>
-        <div class="auto-container">
-            <div class="sec-title centered"><h2>Chat direct</h2><span class="bottom-curve"></span></div>
-        </div>
-    </section>
+	<script>
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + <?php echo $party_id; ?> + '/');
 
-    <script>
-        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-        var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/room_name/');
+		chatSocket.onopen = function(e) {
+			console.log("Connection avec le chat ouverte");
+		};
 
-        chatSocket.onopen = function(e) {
-            console.log("Connection avec le chat ouverte");
-        };
+		chatSocket.onmessage = function(e) {
+			var data = JSON.parse(e.data);
+			var message = data['message'];
+			var msgElement = document.createElement('p');
+			msgElement.textContent = message;
+			document.getElementById('message-container').appendChild(msgElement);
+		};
 
-        chatSocket.onmessage = function(e) {
-            var data = JSON.parse(e.data);
-            var message = data['message'];
-            document.querySelector('#message-container').textContent += (message + '\n');
-        };
+		chatSocket.onclose = function(e) {
+			console.error('Chat socket closed unexpectedly');
+		};
 
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
+		document.getElementById('send-button').onclick = function(e) {
+			var messageInputDom = document.querySelector('#message-input');
+			var message = messageInputDom.value;
+			chatSocket.send(JSON.stringify({
+				'type': 'chat_message',
+				'message': message
+			}));
 
-        document.querySelector('#send-button').onclick = function(e) {
-            var messageInputDom = document.querySelector('#message-input');
-            var message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'type': 'chat_message',
-                'message': message
-            }));
+			messageInputDom.value = '';
+		};
+	</script>
 
-            messageInputDom.value = '';
-        };
-    </script>
 	
 <?php
 	// on inclu le fichier footer.php
