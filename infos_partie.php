@@ -70,43 +70,6 @@
 	
 	$user_id = $user_data->id;
     $username = $user_data->username;
-	
-	echo "
-	<script>
-		var ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
-        var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + $party_id + '/');
-        var senderId = $user_id;
-        var username = '" . $username . "';
-
-		chatSocket.onopen = function(e) {
-			console.log(\"Connection avec le chat ouverte\");
-		};
-
-		chatSocket.onmessage = function(e) {
-			var data = JSON.parse(e.data);
-			var message = data['message'];
-			var sender = data['username'];
-			document.querySelector('#message-container').textContent += (sender + ': ' + message + '\n');
-		};
-
-		chatSocket.onclose = function(e) {
-			console.error(\"Chat socket closed unexpectedly\");
-		};
-
-		document.querySelector('#send-button').onclick = function(e) {
-			var messageInputDom = document.querySelector('#message-input');
-			var message = messageInputDom.value;
-			chatSocket.send(JSON.stringify({
-				'type': 'chat_message',
-				'message': message,
-				'sender_id': senderId,
-				'username': username
-			}));
-
-			messageInputDom.value = '';
-		};
-	</script>
-	";
 
 ?>
 
@@ -237,6 +200,49 @@
 			</div>
 		</div>
 	</section>
+	
+	<?php
+		$party_id = $_GET['party_id'];
+	?>
+
+	<script>
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		var partyId = <?php echo $party_id; ?>;
+		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + partyId + '/');
+		var senderId = <?php echo $user_id; ?>;
+		var username = <?php echo json_encode($username); ?>;
+
+		chatSocket.onopen = function(e) {
+			console.log("Connection avec le chat ouverte");
+		};
+
+		chatSocket.onmessage = function(e) {
+			var data = JSON.parse(e.data);
+			var message = data['message'];
+			var sender = data['username'];
+			if (data['sender_id'] == senderId) {
+				sender = 'Vous';
+			}
+			document.querySelector('#message-container').innerHTML += '<p>' + sender + ': ' + message + '</p>';
+		};
+
+		chatSocket.onclose = function(e) {
+			console.error('Chat socket closed unexpectedly');
+		};
+
+		document.querySelector('#send-button').onclick = function(e) {
+			var messageInputDom = document.querySelector('#message-input');
+			var message = messageInputDom.value;
+			chatSocket.send(JSON.stringify({
+				'type': 'chat_message',
+				'message': message,
+				'sender_id': senderId,
+				'username': username
+			}));
+
+			messageInputDom.value = '';
+		};
+	</script>
 
 	
 <?php
