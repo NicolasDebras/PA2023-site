@@ -201,9 +201,231 @@
 		</div>
 	</section>
 	
-	<?php
-		$party_id = $_GET['party_id'];
-	?>
+	<svg id="morpion" width="300" height="300">
+	</svg>
+
+	<script>
+	// Stockage du JSON dans une variable
+	var data = {
+    "displays": [
+      {
+        "width": "300",
+        "height": "300",
+        "content": [
+          {
+            "tag": "style",
+            "content": "line{stroke:black;stroke-width:4;}"
+          },
+          {
+            "tag": "line",
+            "x1": "0",
+            "y1": "100",
+            "x2": "300",
+            "y2": "100"
+          },
+          {
+            "tag": "line",
+            "x1": "100",
+            "y1": "0",
+            "x2": "100",
+            "y2": "300"
+          },
+          {
+            "tag": "line",
+            "x1": "0",
+            "y1": "200",
+            "x2": "300",
+            "y2": "200"
+          },
+          {
+            "tag": "line",
+            "x1": "200",
+            "y1": "0",
+            "x2": "200",
+            "y2": "300"
+          }
+        ],
+        "player": 1
+      },
+      {
+        "width": "300",
+        "height": "300",
+        "content": [
+          {
+            "tag": "style",
+            "content": "line{stroke:black;stroke-width:4;}"
+          },
+          {
+            "tag": "line",
+            "x1": "0",
+            "y1": "100",
+            "x2": "300",
+            "y2": "100"
+          },
+          {
+            "tag": "line",
+            "x1": "100",
+            "y1": "0",
+            "x2": "100",
+            "y2": "300"
+          },
+          {
+            "tag": "line",
+            "x1": "0",
+            "y1": "200",
+            "x2": "300",
+            "y2": "200"
+          },
+          {
+            "tag": "line",
+            "x1": "200",
+            "y1": "0",
+            "x2": "200",
+            "y2": "300"
+          }
+        ],
+        "player": 2
+      }
+    ],
+    "requested_actions": [
+      {
+        "type": "CLICK",
+        "player": 1,
+        "zones": [
+          {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 0,
+            "y": 100,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 0,
+            "y": 200,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 100,
+            "y": 0,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 100,
+            "y": 100,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 100,
+            "y": 200,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 200,
+            "y": 0,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 200,
+            "y": 100,
+            "width": 100,
+            "height": 100
+          },
+          {
+            "x": 200,
+            "y": 200,
+            "width": 100,
+            "height": 100
+          }
+        ]
+      }
+    ],
+    "game_state": {
+      "scores": [
+        0,
+        0
+      ],
+      "game_over": false
+    }
+  };
+
+	var svg = document.getElementById('morpion');
+	var gameBoard = [
+	  ["", "", ""],
+	  ["", "", ""],
+	  ["", "", ""]
+	];
+
+	data.displays.forEach(function(display, playerIndex) {
+	  display.content.forEach(function(item) {
+		if (item.tag == "line") {
+		  var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+		  line.setAttribute('x1', item.x1);
+		  line.setAttribute('y1', item.y1);
+		  line.setAttribute('x2', item.x2);
+		  line.setAttribute('y2', item.y2);
+		  line.style.stroke = "black";
+		  line.style.strokeWidth = "4";
+		  svg.appendChild(line);
+		}
+	  });
+	});
+
+	data.requested_actions.forEach(function(action) {
+	  action.zones.forEach(function(zone, index) {
+		var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+		rect.setAttribute('x', zone.x);
+		rect.setAttribute('y', zone.y);
+		rect.setAttribute('width', zone.width);
+		rect.setAttribute('height', zone.height);
+		rect.style.fill = "transparent";
+		
+		rect.addEventListener('click', function() {
+			if (gameBoard[Math.floor(index/3)][index%3] != "") {
+			  return;
+			}
+			gameBoard[Math.floor(index/3)][index%3] = action.player == 1 ? "X" : "O";
+			
+			var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+			text.setAttribute('x', zone.x + 50);
+			text.setAttribute('y', zone.y + 70);
+			text.textContent = action.player == 1 ? "X" : "O";
+			text.style.fontFamily = "Verdana";
+			text.style.fontSize = "35px";
+			text.style.fill = "black";
+			svg.appendChild(text);
+			
+			if (checkWin(gameBoard)) {
+			  alert("Player " + action.player + " wins!");
+			}
+		  });
+		svg.appendChild(rect);
+	  });
+	});
+
+	function checkWin(board) {
+	  for (var i = 0; i < 3; i++) {
+		if (board[i][0] != "" && board[i][0] == board[i][1] && board[i][0] == board[i][2]) return true;
+		if (board[0][i] != "" && board[0][i] == board[1][i] && board[0][i] == board[2][i]) return true;
+	  }
+	  if (board[0][0] != "" && board[0][0] == board[1][1] && board[0][0] == board[2][2]) return true;
+	  if (board[0][2] != "" && board[0][2] == board[1][1] && board[0][2] == board[2][0]) return true;
+	  
+	  return false;
+	}
+
+	</script>
+
+
 
 	<script>
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
