@@ -70,6 +70,28 @@
 	
 	$user_id = $user_data->id;
     $username = $user_data->username;
+	
+	// Récupére les derniers messages
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/message/' . $party_id . '/',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Token ' . $auth_token
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($http_status == 200) {
+        $messages = json_decode($response);
+    } else {
+        echo 'Unexpected HTTP status: ' . $http_status;
+        $messages = null;
+    }
+
+    curl_close($curl);
 
 ?>
 
@@ -186,6 +208,13 @@
 							<h4 class="card-title">Chat direct</h4>
 						</div>
 						<div id="message-container" class="card-body chat-body" style="height: 300px; overflow-y: auto;">
+							<?php if ($messages !== null): ?>
+								<?php foreach ($messages as $message): ?>
+									<p>
+										<?php echo ($message->sender->id == $user_id ? 'Vous' : htmlspecialchars($message->sender->username)) . ': ' . htmlspecialchars($message->content); ?>
+									</p>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</div>
 						<div class="card-footer">
 							<div class="input-group">
@@ -199,8 +228,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
-	
+	</section>	
 	<svg id="morpion" width="300" height="300">
 	</svg>
 
