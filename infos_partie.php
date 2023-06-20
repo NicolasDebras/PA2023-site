@@ -210,7 +210,7 @@
 						<div id="message-container" class="card-body chat-body" style="height: 300px; overflow-y: auto;">
 							<?php if ($messages !== null): ?>
 								<?php foreach ($messages as $message): ?>
-									<p>
+									<p data-sender-id="<?php echo $message->sender->id; ?>">
 										<?php echo ($message->sender->id == $user_id ? 'Vous' : htmlspecialchars($message->sender->username)) . ': ' . htmlspecialchars($message->content); ?>
 									</p>
 								<?php endforeach; ?>
@@ -456,6 +456,42 @@
 
 
 	<script>
+		function hashCode(str) {
+			var hash = 0;
+			for (var i = 0; i < str.length; i++) {
+			   hash = str.charCodeAt(i) + ((hash << 5) - hash);
+			}
+			return hash;
+		}
+
+		function generateColor(id) {
+			// Convertir l'ID en nombre
+			let numericId = hashCode(id.toString());
+
+			// Regarder si la couleur est déjà dans le stockage de session
+			let color = sessionStorage.getItem('user-color-' + numericId);
+			if (color) {
+				return color;
+			}
+
+			// Sinon, générer une nouvelle couleur
+			let decimal = Math.abs(numericId) / Number.MAX_SAFE_INTEGER;
+			let hue = decimal * 360;
+			color = `hsl(${hue}, 100%, 75%)`;
+
+			// Stocker la couleur dans le stockage de session
+			sessionStorage.setItem('user-color-' + numericId, color);
+
+			return color;
+		}
+
+		// Coloration des messages existants
+		document.querySelectorAll('#message-container p').forEach(function(p) {
+			var senderId = p.dataset.senderId;
+			var color = generateColor(senderId);
+			p.style.color = color;
+		});
+
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
 		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + partyId + '/');
@@ -470,10 +506,14 @@
 			var data = JSON.parse(e.data);
 			var message = data['message'];
 			var sender = data['username'];
-			if (data['sender_id'] == senderId) {
-				sender = 'Vous';
-			}
-			document.querySelector('#message-container').innerHTML += '<p>' + sender + ': ' + message + '</p>';
+			var senderIdInMessage = data['sender_id'];
+			var color = generateColor(senderIdInMessage);
+
+			var messageElement = document.createElement('p');
+			messageElement.style.color = color;
+			messageElement.textContent = (senderIdInMessage == senderId ? 'Vous' : sender) + ': ' + message;
+
+			document.querySelector('#message-container').appendChild(messageElement);
 		};
 
 		chatSocket.onclose = function(e) {
