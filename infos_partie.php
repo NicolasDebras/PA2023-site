@@ -35,6 +35,79 @@
 	} elseif ($joined === 'false') {
 		echo '<div class="alert alert-danger" role="alert">Erreur ! Petit malin ! Tu ne peux pas accepter deux fois une demande!</div>';
 	}
+	
+    $user_id = $_COOKIE['user_id'];
+
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array(
+        'Authorization: Token ' . $auth_token
+      ),
+      CURLOPT_FOLLOWLOCATION => true,
+    ));
+
+    $response = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($http_status == 200) {
+        $user_data = json_decode($response);
+        $username = $user_data->username;
+    } else {
+        echo 'Unexpected HTTP status: ' . $http_status;
+        $username = null;
+    }
+	
+    curl_close($curl);
+	
+	if (isset($username)) {
+		echo '<script>console.log("username est défini : ", ' . json_encode($username) . ')</script>';
+	} else {
+		echo '<script>console.log("username n\'est pas défini.")</script>';
+	}
+	
+	$user_id = $user_data->id;
+    $username = $user_data->username;
+	
+	echo "
+	<script>
+		var ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
+        var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + $party_id + '/');
+        var senderId = $user_id;
+        var username = '" . $username . "';
+
+		chatSocket.onopen = function(e) {
+			console.log(\"Connection avec le chat ouverte\");
+		};
+
+		chatSocket.onmessage = function(e) {
+			var data = JSON.parse(e.data);
+			var message = data['message'];
+			var sender = data['username'];
+			document.querySelector('#message-container').textContent += (sender + ': ' + message + '\n');
+		};
+
+		chatSocket.onclose = function(e) {
+			console.error(\"Chat socket closed unexpectedly\");
+		};
+
+		document.querySelector('#send-button').onclick = function(e) {
+			var messageInputDom = document.querySelector('#message-input');
+			var message = messageInputDom.value;
+			chatSocket.send(JSON.stringify({
+				'type': 'chat_message',
+				'message': message,
+				'sender_id': senderId,
+				'username': username
+			}));
+
+			messageInputDom.value = '';
+		};
+	</script>
+	";
+
 ?>
 
 
@@ -164,38 +237,6 @@
 			</div>
 		</div>
 	</section>
-
-	<script>
-		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + <?php echo $party_id; ?> + '/');
-
-		chatSocket.onopen = function(e) {
-			console.log("Connection avec le chat ouverte");
-		};
-
-		chatSocket.onmessage = function(e) {
-			var data = JSON.parse(e.data);
-			var message = data['message'];
-			var msgElement = document.createElement('p');
-			msgElement.textContent = message;
-			document.getElementById('message-container').appendChild(msgElement);
-		};
-
-		chatSocket.onclose = function(e) {
-			console.error('Chat socket closed unexpectedly');
-		};
-
-		document.getElementById('send-button').onclick = function(e) {
-			var messageInputDom = document.querySelector('#message-input');
-			var message = messageInputDom.value;
-			chatSocket.send(JSON.stringify({
-				'type': 'chat_message',
-				'message': message
-			}));
-
-			messageInputDom.value = '';
-		};
-	</script>
 
 	
 <?php
