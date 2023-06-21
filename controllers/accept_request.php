@@ -26,6 +26,10 @@ if (isset($_POST['submit-form'])) {
 	} else {
 		header('Location: ../infos_partie.php?party_id=' . $party_id . '&joined=false');
 	}
+	
+	if ($user_id != $party_data->Founder->id) {
+		header('Location: ../infos_partie.php?party_id=' . $party_id . '&error=not_founder');
+	}
 } else {
     header('Location: ../index.php');
 }

@@ -168,32 +168,34 @@
 		<div class="auto-container">
 			<div class="sec-title centered"><h2>Participants en attente</h2><span class="bottom-curve"></span></div>
 			<div class="row clearfix">
-				<?php if ($party_data !== null && !empty($party_data->pending_participants)): ?>
-					<?php foreach ($party_data->pending_participants as $participant): ?>
-						<div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style="margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
-							<div class="inner-box">
-								<figure class="image-box"><a href="#"><img src="<?php echo htmlspecialchars($participant->player->url_image); ?>" alt="" title=""></a></figure>
-								<div class="lower-box">
-									<h3><a href="#"><?php echo htmlspecialchars($participant->player->username); ?></a></h3>
-									<div class="designation">ID: <?php echo htmlspecialchars($participant->player->id); ?></div>
-									<?php if ($user_id == $party_data->Founder->id): ?>
-										<div class="text-center">
-											<form method="post" action="controllers/accept_request.php">
-												<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-												<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
-												<input type="hidden" name="request_id" value="<?php echo htmlspecialchars($participant->id); ?>">
-												<input type="hidden" name="party_id" value="<?php echo $party_id; ?>">
-												<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter</span></button>
-											</form>
-										</div>
-									<?php endif; ?>
-								</div>
+			<?php if ($party_data !== null && !empty($party_data->pending_participants)): ?>
+				<?php foreach ($party_data->pending_participants as $participant): ?>
+					<div class="team-block col-lg-3 col-md-6 col-sm-12 wow fadeInLeft" style="margin:auto;" data-wow-delay="0ms" data-wow-duration="1500ms">
+						<div class="inner-box">
+							<figure class="image-box"><a href="#"><img src="<?php echo htmlspecialchars($participant->player->url_image); ?>" alt="" title=""></a></figure>
+							<div class="lower-box">
+								<h3><a href="#"><?php echo htmlspecialchars($participant->player->username); ?></a></h3>
+								<div class="designation">ID: <?php echo htmlspecialchars($participant->player->id); ?></div>
+								<?php if ($user_id == $party_data->Founder->id): ?>
+									<div class="text-center">
+										<form method="post" action="controllers/accept_request.php">
+											<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+											<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
+											<input type="hidden" name="request_id" value="<?php echo htmlspecialchars($participant->id); ?>">
+											<input type="hidden" name="party_id" value="<?php echo $party_id; ?>">
+											<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter</span></button>
+										</form>
+									</div>
+								<?php elseif ($user_id != $party_data->Founder->id): ?>
+									<p class="text-danger">Seul le créateur de la partie peut accepter les demandes.</p>
+								<?php endif; ?>
 							</div>
 						</div>
-					<?php endforeach; ?>
-				<?php else: ?>
-					<p class="text-center">Aucun participant en attente trouvé.</p>
-				<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<p class="text-center">Aucun participant en attente trouvé.</p>
+			<?php endif; ?>
 			</div>
 		</div>
 	</section>
