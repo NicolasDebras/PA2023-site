@@ -73,9 +73,7 @@ include 'controllers/back.php';
                                             <li><a href="team.php">Notre équipe</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="partie.php">Partie</a>
-                                    </li>
-                                    <li><a href="gallery.php">Gallery</a></li>
+                                    <li><a href="partie.php">Partie</a></li>
 									<li class="dropdown"><a>Compte</a>
 										<ul>
 											<?php

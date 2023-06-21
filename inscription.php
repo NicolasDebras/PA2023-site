@@ -28,7 +28,7 @@
 
         <div class="form-box">
             <div class="default-form contact-form">
-                <form method="post" action="controllers/register.php" id="signup-form">
+                <form method="post" action="controllers/register.php" id="signup-form" enctype="multipart/form-data">
                     <div class="row clearfix">
                         <div class="col-md-12 col-sm-12 form-group">
                             <input type="text" name="username" placeholder="Nom d'utilisateur" required="">
@@ -49,6 +49,11 @@
                         <div class="col-md-12 col-sm-12 form-group">
                             <input type="text" name="last_name" placeholder="Nom de famille" required="">
                         </div>
+						
+						<div class="col-md-12 col-sm-12 form-group">
+								<label for="url_image">Ajouter une photo de profil :</label>
+								<input type="file" name="url_image" id="url_image" accept="image/*" required>
+						</div>
 
                         <div class="col-md-12 col-sm-12 form-group">
                             <div class="text-center">
