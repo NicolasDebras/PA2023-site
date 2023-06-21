@@ -2,6 +2,18 @@
 	// on inclu le fichier entete.php
     require_once('includes/entete.php');
     $auth_token = $_COOKIE['auth_token'];
+	
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+	
+	if (!isset($_COOKIE['auth_token'])) {
+		echo '<script type="text/javascript">
+			   window.location.href = "index.php";
+		  </script>';
+	}
+
+
     $party_id = $_GET['party_id'];
 
     $curl = curl_init();
