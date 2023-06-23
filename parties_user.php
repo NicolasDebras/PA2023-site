@@ -68,15 +68,15 @@
 					<div class="game-block col-lg-4 col-md-6 col-sm-12 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="inner-box">
 							<div class="image-box">
-								<figure class="image"><a href=""><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
+								<figure class="image"><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
 								<div class="link-box"><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>" class="link-btn"> <span class="btn-title">Accéder</span></a></div>
 							</div>
 							<div class="lower-content">
-								<h3><a href="game-details.html"><?php echo htmlspecialchars($party->title); ?></a></h3>
+								<h3><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>"><?php echo htmlspecialchars($party->title); ?></a></h3>
 								<div class="text">Créé par : <?php echo htmlspecialchars($party->Founder->username); ?></div>
 								<div class="post-info">
 									<ul class="clearfix">
-										<li><a href="#"><span class="icon flaticon-calendar-2"></span><?php echo date('F Y', strtotime($party->created_at)); ?></a></li>
+										<li><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>"><span class="icon flaticon-calendar-2"></span><?php echo date('F Y', strtotime($party->created_at)); ?></a></li>
 									</ul>
 								</div>
 							</div>
