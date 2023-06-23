@@ -62,42 +62,81 @@ include 'controllers/back.php';
                         <div class="mobile-nav-toggler"><span class="icon flaticon-menu-2"></span></div>
 
                         <!-- Main Menu -->
-                        <nav class="main-menu navbar-expand-md navbar-light">
-                            <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
-                                <ul class="navigation clearfix">
-                                    <li><a href="index.php">Accueil</a>
-                                    </li>
+						<nav class="main-menu navbar-expand-md navbar-light">
+							<div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
+								<ul class="navigation clearfix">
+									<li><a href="index.php">Accueil</a>
+									</li>
 									<li class="dropdown"><a href="about.php">A propos</a>
-                                        <ul>
-                                            <li><a href="about.php">A propos de nous</a></li>
-                                            <li><a href="team.php">Notre équipe</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="partie.php">Partie</a></li>
-									<li class="dropdown"><a>Compte</a>
 										<ul>
-											<?php
-											// Si l'utilisateur est connecté
-											if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
-											?>
-												<li><a href="gestion.php">Gestion du compte</a></li>
-												<li><a href="creation_partie.php">Créer une partie</a></li>
-												<li><a href="parties_user.php">Mes parties</a></li>
-												<li><a href="ami.php">Ami</a></li>
-												<li><a href="controllers/deconnexion.php">Déconnexion</a></li>
-											<?php
-											} else {
-											?>
-												<li><a href="compte.php">Connexion</a></li>
-												<li><a href="inscription.php">Inscription</a></li>
-											<?php
-											}
-											?>
+											<li><a href="about.php">A propos de nous</a></li>
+											<li><a href="team.php">Notre équipe</a></li>
 										</ul>
 									</li>
-                                </ul>
-                            </div>
-                        </nav>
+									<li><a href="partie.php">Partie</a></li>
+									<?php
+									// Si l'utilisateur est connecté
+									if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
+										$username = 'Compte';
+										if (isset($_COOKIE['username']) && !empty($_COOKIE['username'])) {
+											$username = $_COOKIE['username'];
+										} else {
+											$user_id = $_COOKIE['user_id'];
+											$auth_token = $_COOKIE['auth_token'];
+
+											$curl = curl_init();
+
+											curl_setopt_array($curl, array(
+												CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+												CURLOPT_RETURNTRANSFER => true,
+												CURLOPT_HTTPHEADER => array(
+													'Authorization: Token ' . $auth_token
+												),
+												CURLOPT_FOLLOWLOCATION => true,
+											));
+
+											$response = curl_exec($curl);
+											$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+											if ($http_status == 200) {
+												$user_data = json_decode($response);
+												$username = $user_data->username;
+												setcookie('username', $username, time() + 86400 * 30, '/'); // 86400 = 1 day
+											}
+
+											curl_close($curl);
+										}
+										echo '<li class="dropdown"><a>' . $username . '</a>';
+									} else {
+										echo '<li class="dropdown"><a>Compte</a>';
+									}
+									?>
+									<ul>
+										<?php
+										// Si l'utilisateur est connecté
+										if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
+										?>
+											<li><a href="gestion.php">Gestion du compte</a></li>
+											<li><a href="creation_partie.php">Créer une partie</a></li>
+											<li><a href="parties_user.php">Mes parties</a></li>
+											<li><a href="ami.php">Ami</a></li>
+											<li><a href="controllers/deconnexion.php">Déconnexion</a></li>
+										<?php
+										} else {
+										?>
+											<li><a href="compte.php">Connexion</a></li>
+											<li><a href="inscription.php">Inscription</a></li>
+										<?php
+										}
+										?>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						</nav>
+
+
+
                         <!-- Main Menu End-->
                         
                     </div>
