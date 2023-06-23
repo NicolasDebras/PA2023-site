@@ -65,8 +65,7 @@ include 'controllers/back.php';
 						<nav class="main-menu navbar-expand-md navbar-light">
 							<div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
 								<ul class="navigation clearfix">
-									<li><a href="index.php">Accueil</a>
-									</li>
+									<li><a href="index.php">Accueil</a></li>
 									<li class="dropdown"><a href="about.php">A propos</a>
 										<ul>
 											<li><a href="about.php">A propos de nous</a></li>
@@ -78,8 +77,10 @@ include 'controllers/back.php';
 									// Si l'utilisateur est connecté
 									if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
 										$username = 'Compte';
+										$profile_picture = 'default_picture.jpg'; // replace this with default picture URL
 										if (isset($_COOKIE['username']) && !empty($_COOKIE['username'])) {
 											$username = $_COOKIE['username'];
+											$profile_picture = $_COOKIE['url_image'];
 										} else {
 											$user_id = $_COOKIE['user_id'];
 											$auth_token = $_COOKIE['auth_token'];
@@ -101,12 +102,14 @@ include 'controllers/back.php';
 											if ($http_status == 200) {
 												$user_data = json_decode($response);
 												$username = $user_data->username;
-												setcookie('username', $username, time() + 86400 * 30, '/'); // 86400 = 1 day
+												$profile_picture = $user_data->url_image; 
+												setcookie('username', $username, time() + 86400 * 30, '/');
+												setcookie('url_image', $profile_picture, time() + 86400 * 30, '/'); // 86400 = 1 day
 											}
 
 											curl_close($curl);
 										}
-										echo '<li class="dropdown"><a>' . $username . '</a>';
+										echo '<li class="dropdown"><a><img src="'.$profile_picture.'" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 5px;">' . $username . '</a>';
 									} else {
 										echo '<li class="dropdown"><a>Compte</a>';
 									}
@@ -134,6 +137,7 @@ include 'controllers/back.php';
 							</ul>
 						</div>
 						</nav>
+
 
 
 
