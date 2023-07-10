@@ -18,7 +18,7 @@
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/' . $party_id . '/',
+        CURLOPT_URL => 'http://139.162.199.69/api/party/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
@@ -53,7 +53,7 @@
     $curl = curl_init();
     
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+      CURLOPT_URL => 'http://139.162.199.69/api/player/' . $user_id . '/',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_HTTPHEADER => array(
         'Authorization: Token ' . $auth_token
@@ -86,7 +86,7 @@
 	// Récupére les derniers messages
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/message/' . $party_id . '/',
+        CURLOPT_URL => 'http://139.162.199.69/api/message/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array(
             'Authorization: Token ' . $auth_token

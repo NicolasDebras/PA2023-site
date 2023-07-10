@@ -10,7 +10,7 @@ if ($user_id !== null && $party_id !== null) {
 
     // Prépare la requête cURL (autre format que les autrees mais même fonctionnement)
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api-pa2023.herokuapp.com/api/addParticipant/' . $user_id . '/' . $party_id . '/');
+    curl_setopt($ch, CURLOPT_URL, 'http://139.162.199.69/api/addParticipant/' . $user_id . '/' . $party_id . '/');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [

@@ -42,7 +42,7 @@ if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
     );
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/party/',
+        CURLOPT_URL => 'http://139.162.199.69/api/party/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($data),

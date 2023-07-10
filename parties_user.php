@@ -10,7 +10,7 @@
     // Récupère les parties depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-pa2023.herokuapp.com/api/myparty/' . $user_id . '/?page=' . $current_page,
+        CURLOPT_URL => 'http://139.162.199.69/api/myparty/' . $user_id . '/?page=' . $current_page,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
