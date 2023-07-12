@@ -1,4 +1,6 @@
 <?php
+	date_default_timezone_set('Europe/Paris');
+
 	// on inclu le fichier entete.php
     require_once('includes/entete.php');
     $auth_token = $_COOKIE['auth_token'];
@@ -215,28 +217,32 @@
 			</div>
 		</div>
 	</section>
-	
+
 	<!-- Chat Section -->
 	<section class="contact-section">
-		<div class="container">
+		<div class="container py-5">
 			<div class="row justify-content-center">
 				<div class="col-lg-8">
 					<div class="card">
-						<div class="card-header">
-							<h4 class="card-title">Chat direct</h4>
+						<div class="card-header bg-primary text-white">
+							<h4 class="card-title mb-0">Chat en direct</h4>
 						</div>
-						<div id="message-container" class="card-body chat-body" style="height: 300px; overflow-y: auto;">
+						<div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
 							<?php if ($messages !== null): ?>
 								<?php foreach ($messages as $message): ?>
-									<p data-sender-id="<?php echo $message->sender->id; ?>">
-										<?php echo ($message->sender->id == $user_id ? 'Vous' : htmlspecialchars($message->sender->username)) . ': ' . htmlspecialchars($message->content); ?>
-									</p>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>"><?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?></div>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
+										<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+											<?php echo htmlspecialchars($message->content); ?>
+											<span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
+										</div>
+									</div>
 								<?php endforeach; ?>
 							<?php endif; ?>
 						</div>
 						<div class="card-footer">
 							<div class="input-group">
-								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici">
+								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici" required="">
 								<div class="input-group-append">
 									<button id="send-button" class="btn btn-primary">Envoyer</button>
 								</div>
@@ -246,7 +252,11 @@
 				</div>
 			</div>
 		</div>
-	</section>	
+	</section>
+
+	
+
+
 	<svg id="morpion" width="300" height="300">
 	</svg>
 
@@ -477,42 +487,14 @@
 		function hashCode(str) {
 			var hash = 0;
 			for (var i = 0; i < str.length; i++) {
-			   hash = str.charCodeAt(i) + ((hash << 5) - hash);
+				hash = str.charCodeAt(i) + ((hash << 5) - hash);
 			}
 			return hash;
 		}
 
-		function generateColor(id) {
-			// Convertir l'ID en nombre
-			let numericId = hashCode(id.toString());
-
-			// Regarder si la couleur est déjà dans le stockage de session
-			let color = sessionStorage.getItem('user-color-' + numericId);
-			if (color) {
-				return color;
-			}
-
-			// Sinon, générer une nouvelle couleur
-			let decimal = Math.abs(numericId) / Number.MAX_SAFE_INTEGER;
-			let hue = decimal * 360;
-			color = `hsl(${hue}, 100%, 75%)`;
-
-			// Stocker la couleur dans le stockage de session
-			sessionStorage.setItem('user-color-' + numericId, color);
-
-			return color;
-		}
-
-		// Coloration des messages existants
-		document.querySelectorAll('#message-container p').forEach(function(p) {
-			var senderId = p.dataset.senderId;
-			var color = generateColor(senderId);
-			p.style.color = color;
-		});
-
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
-		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + partyId + '/');
+		var chatSocket = new WebSocket(ws_scheme + '://139.162.199.69/ws/chat/' + partyId + '/');
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
@@ -525,14 +507,30 @@
 			var message = data['message'];
 			var sender = data['username'];
 			var senderIdInMessage = data['sender_id'];
-			var color = generateColor(senderIdInMessage);
 
-			var messageElement = document.createElement('p');
-			messageElement.style.color = color;
-			messageElement.textContent = (senderIdInMessage == senderId ? 'Vous' : sender) + ': ' + message;
+			var messageElement = document.createElement('div');
+
+			if(senderIdInMessage == senderId) {
+				messageElement.classList.add("message-sent");
+				messageElement.innerHTML = `<div class="d-flex justify-content-end">Vous</div>
+											<div class="d-flex justify-content-end mb-3">
+												<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+															${message}
+												</div>
+											</div>`;
+			} else {
+				messageElement.classList.add("message-received");
+				messageElement.innerHTML = `<div class="d-flex justify-content-start">${sender}</div>
+											<div class="d-flex justify-content-start mb-3">
+												<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+															${message}
+												</div>
+											</div>`;
+			}
 
 			document.querySelector('#message-container').appendChild(messageElement);
 		};
+
 
 		chatSocket.onclose = function(e) {
 			console.error('Chat socket closed unexpectedly');
@@ -551,6 +549,7 @@
 			messageInputDom.value = '';
 		};
 	</script>
+
 
 	
 <?php

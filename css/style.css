@@ -90,6 +90,18 @@ font-family: 'Oswald', sans-serif;
 
  ***/
 
+ .msg_cotainer_send {
+	max-width: 70%;
+}
+
+.msg_time_send {
+	font-size: 0.8rem;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+
 
 body {
 	
