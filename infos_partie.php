@@ -106,7 +106,26 @@
     }
 
     curl_close($curl);
+	
+	function relativeDate($date) {
+		$utc = new DateTimeZone('UTC');
+		$currentDate = new DateTime('', $utc);
+		$interval = $date->diff($currentDate);
 
+		if ($interval->y >= 1) {
+			return $interval->format('Il y a %y ans');
+		} else if ($interval->m >= 1) {
+			return $interval->format('Il y a %m mois');
+		} else if ($interval->d >= 1) {
+			return $interval->format('Il y a %d jours');
+		} else if ($interval->h >= 1) {
+			return $interval->format('Il y a %h heures');
+		} else if ($interval->i >= 1) {
+			return $interval->format('Il y a %i minutes');
+		} else {
+			return 'Moins d\'une minute';
+		}
+	}
 ?>
 
 
@@ -231,6 +250,12 @@
 							<?php if ($messages !== null): ?>
 								<?php foreach ($messages as $message): ?>
 									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>"><?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?></div>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>">
+										<?php 
+										$date = new DateTime($message->timestamp, new DateTimeZone('UTC'));
+										echo relativeDate($date);
+										?>
+									</div>
 									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
 										<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
 											<?php echo htmlspecialchars($message->content); ?>
@@ -491,6 +516,32 @@
 			}
 			return hash;
 		}
+		
+		function timeSince(date) {
+		  var seconds = Math.floor((new Date() - date) / 1000);
+		  var interval = Math.floor(seconds / 31536000);
+		  if (interval > 1) {
+			return "Il y a" + interval + " ans";
+		  }
+		  interval = Math.floor(seconds / 2592000);
+		  if (interval > 1) {
+			return "Il y a" + interval + " mois";
+		  }
+		  interval = Math.floor(seconds / 86400);
+		  if (interval > 1) {
+			return "Il y a" + interval + " jours";
+		  }
+		  interval = Math.floor(seconds / 3600);
+		  if (interval > 1) {
+			return "Il y a" + interval + " heures";
+		  }
+		  interval = Math.floor(seconds / 60);
+		  if (interval > 1) {
+			return "Il y a" + interval + " minutes";
+		  }
+		  return "Moins d'une minute";
+		}
+
 
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
@@ -503,34 +554,45 @@
 		};
 
 		chatSocket.onmessage = function(e) {
-			var data = JSON.parse(e.data);
-			var message = data['message'];
-			var sender = data['username'];
-			var senderIdInMessage = data['sender_id'];
+		  var data = JSON.parse(e.data);
+		  var message = data['message'];
+		  var sender = data['username'];
+		  var senderIdInMessage = data['sender_id'];
+		  var timestamp = new Date(data['timestamp']);
 
-			var messageElement = document.createElement('div');
+		  var messageElement = document.createElement('div');
 
-			if(senderIdInMessage == senderId) {
-				messageElement.classList.add("message-sent");
-				messageElement.innerHTML = `<div class="d-flex justify-content-end">Vous</div>
-											<div class="d-flex justify-content-end mb-3">
-												<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-															${message}
-												</div>
-											</div>`;
-			} else {
-				messageElement.classList.add("message-received");
-				messageElement.innerHTML = `<div class="d-flex justify-content-start">${sender}</div>
-											<div class="d-flex justify-content-start mb-3">
-												<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-															${message}
-												</div>
-											</div>`;
-			}
+		  if(senderIdInMessage == senderId) {
+			messageElement.classList.add("message-sent");
+			messageElement.innerHTML = `<div class="d-flex justify-content-end">Vous</div>
+										<div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-end">${timeSince(timestamp)}</div>
+										<div class="d-flex justify-content-end mb-3">
+											<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+												${message}
+											</div>
+										</div>`;
+		  } else {
+			messageElement.classList.add("message-received");
+			messageElement.innerHTML = `<div class="d-flex justify-content-start">${sender}</div>
+										<div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-start">${timeSince(timestamp)}</div>
+										<div class="d-flex justify-content-start mb-3">
+											<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+												${message}
+											</div>
+										</div>`;
+		  }
 
-			document.querySelector('#message-container').appendChild(messageElement);
+		  document.querySelector('#message-container').appendChild(messageElement);
 		};
 
+		setInterval(function() {
+		  var timestampElements = document.querySelectorAll('.timestamp');
+
+		  timestampElements.forEach(function(element) {
+			var timestamp = new Date(parseInt(element.getAttribute('data-timestamp')));
+			element.textContent = timeSince(timestamp);
+		  });
+		}, 5000);
 
 		chatSocket.onclose = function(e) {
 			console.error('Chat socket closed unexpectedly');
