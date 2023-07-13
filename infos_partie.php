@@ -20,7 +20,7 @@
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/party/' . $party_id . '/',
+        CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/party/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
@@ -55,7 +55,7 @@
     $curl = curl_init();
     
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://139.162.199.69/api/player/' . $user_id . '/',
+      CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_HTTPHEADER => array(
         'Authorization: Token ' . $auth_token
@@ -88,7 +88,7 @@
 	// Récupére les derniers messages
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/message/' . $party_id . '/',
+        CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/message/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array(
             'Authorization: Token ' . $auth_token
@@ -297,6 +297,63 @@
 			</div>
 		</div>
 	</section>
+
+	<!-- Game Section -->
+	<section class="video-section">
+		<div class="image-layer" style="background-image: url(images/background/video-bg.jpg);"></div>
+
+		<div class="auto-container">
+			<div class="content-box wow zoomInStable" data-wow-delay="0ms" data-wow-duration="2500ms">
+				<div class="link-box">
+					<a href="#myContent" class="lightbox-image"><span class="fa fa-cog fa-fw"></span></a>
+				</div>
+				<h2>Configurer le jeu !</h2>
+			</div>
+		</div>
+
+		<!-- This is your own content that will be displayed in the lightbox -->
+		<div id="myContent" style="display: none; background-color: black;">
+		<section class="contact-section">
+			<div class="auto-container">
+				<!--Title-->
+				<div class="sec-title centered"><h2>Configuration</h2><span class="bottom-curve"></span></div>
+
+				<div class="form-box">
+					<div class="default-form contact-form">
+						<form method="post" action="controllers/register.php" id="signup-form" enctype="multipart/form-data">
+							<div class="row clearfix">
+								<div class="col-md-12 col-sm-12 form-group">
+									<input type="text" name="arguments" placeholder="Gestion des arguments" required="">
+								</div>
+
+								<div class="col-md-12 col-sm-12 form-group">
+									<input type="email" name="langage" placeholder="Langage (.py only)" required="">
+								</div>
+
+								<div class="col-md-12 col-sm-12 form-group">
+									<input type="text" name="number" placeholder="Nombre de joueurs" required="">
+								</div>
+								
+								<div class="col-md-12 col-sm-12 form-group">
+										<label for="game">Importer le fichier :</label>
+										<input type="file" name="game" id="game" required>
+								</div>
+
+								<div class="col-md-12 col-sm-12 form-group">
+									<div class="text-center">
+										<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Envoyer</span></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+		</div>
+	</section>
+	
+
 	
 	<script>
 		function hashCode(str) {
@@ -335,7 +392,7 @@
 
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
-		var chatSocket = new WebSocket(ws_scheme + '://139.162.199.69/ws/chat/' + partyId + '/');
+		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + partyId + '/');
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
@@ -402,6 +459,7 @@
 			messageInputDom.value = '';
 		};
 	</script>
+		
 
 
 	
