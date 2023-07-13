@@ -277,18 +277,21 @@
 								</div>
 							</div>
 						</div>
+						<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+						<script type="module">
+						  import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
+						  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
+						  const button = document.querySelector('button')
+						  const tooltip = document.querySelector('.tooltip')
+						  Popper.createPopper(button, tooltip)
 
-					<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-					<script type="module">
-					  import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
-					  const button = document.querySelector('button')
-					  const tooltip = document.querySelector('.tooltip')
-					  Popper.createPopper(button, tooltip)
-
-					  document.querySelector('button').onclick = () => {
-						tooltip.classList.toggle('shown')
-					  }
-					</script>
+						  document.querySelector('button').onclick = () => {
+							tooltip.classList.toggle('shown')
+						  }
+						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
+							insertText(document.querySelector('input'), e.detail.unicode)
+						  })
+						</script>
 					</div>
 				</div>
 			</div>

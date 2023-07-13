@@ -23,11 +23,17 @@ include 'controllers/back.php';
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <script src="js/chat.js"></script>
-  <style>
-      .tooltip:not(.shown) {
-          display: none;
-      }
-  </style>
+<style>
+.tooltip:not(.shown) {
+	display: none;
+}
+
+.tooltip.shown {
+	opacity: 1;
+}
+</style>
+
+
 </head>
 
 <body>
