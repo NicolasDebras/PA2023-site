@@ -20,7 +20,7 @@
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/party/' . $party_id . '/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/party/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
@@ -55,7 +55,7 @@
     $curl = curl_init();
     
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/player/' . $user_id . '/',
+      CURLOPT_URL => 'https://nicolasdebras.fr/api/player/' . $user_id . '/',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_HTTPHEADER => array(
         'Authorization: Token ' . $auth_token
@@ -88,7 +88,7 @@
 	// Récupére les derniers messages
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://api-pa2023.herokuapp.com/api/message/' . $party_id . '/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/message/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array(
             'Authorization: Token ' . $auth_token
@@ -389,10 +389,9 @@
 		  return "Moins d'une minute";
 		}
 
-
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
-		var chatSocket = new WebSocket(ws_scheme + '://api-pa2023.herokuapp.com/ws/chat/' + partyId + '/');
+		var chatSocket = new WebSocket(ws_scheme + '://nicolasdebras.fr/ws/chat/' + partyId + '/');
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
