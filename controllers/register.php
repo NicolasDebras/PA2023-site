@@ -40,7 +40,7 @@ if (isset($_POST['submit-form'])) {
 	
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/player/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/player/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($data),

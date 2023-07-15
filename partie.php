@@ -8,7 +8,7 @@
     // Récupère les parties depuis l'API
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://139.162.199.69/api/party/?page=' . $current_page,
+      CURLOPT_URL => 'https://nicolasdebras.fr/api/party/?page=' . $current_page,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_FOLLOWLOCATION => true,
     ));

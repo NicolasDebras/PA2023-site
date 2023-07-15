@@ -7,7 +7,7 @@ if (isset($_POST['submit-form'])) {
     // Recherche de l'utilisateur par son pseudo
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/playerName/' . urlencode($friend_username) . '/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/playerName/' . urlencode($friend_username) . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array(
             'Authorization: Token ' . $auth_token
@@ -26,7 +26,7 @@ if (isset($_POST['submit-form'])) {
         // Ajout de l'ami
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://139.162.199.69/api/addfriend/' . $user_id . '/' . $friend_id . '/',
+            CURLOPT_URL => 'https://nicolasdebras.fr/api/addfriend/' . $user_id . '/' . $friend_id . '/',
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => array(
                 'Authorization: Token ' . $auth_token

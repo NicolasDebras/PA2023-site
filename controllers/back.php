@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/auth/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/auth/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => http_build_query(array(
@@ -57,7 +57,7 @@ if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token']) && isset($_C
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://139.162.199.69/api/player/' . $user_id . '/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/player/' . $user_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array(
             'Authorization: Token ' . $auth_token
