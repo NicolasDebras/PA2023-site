@@ -281,11 +281,11 @@
 						<script type="module">
 						  import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
 						  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
-						  const button = document.querySelector('button')
+						  const button = document.querySelector('#emoji-button')
 						  const tooltip = document.querySelector('.tooltip')
 						  Popper.createPopper(button, tooltip)
 
-						  document.querySelector('button').onclick = () => {
+						  document.querySelector('#emoji-button').onclick = () => {
 							tooltip.classList.toggle('shown')
 						  }
 						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
@@ -390,6 +390,7 @@
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
 		var chatSocket = new WebSocket(ws_scheme + '://nicolasdebras.fr/ws/chat/' + partyId + '/');
+		console.log(chatSocket);
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
