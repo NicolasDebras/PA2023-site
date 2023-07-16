@@ -21,7 +21,7 @@ if (isset($_POST['submit-form'])) {
 
     $party_id = $_POST['party_id'];
     $url_game = "";
-    $number = $_POST['number'];
+    $number = intval($_POST['number']);
     $language = $_POST['langage'];
     $game_file = $_FILES['game'];
 
