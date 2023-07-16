@@ -446,6 +446,17 @@
         </div>
     </section>
     <?php endif; ?>
+    
+    <?php if ($party_data->started == true): ?>
+    <section class="games-section">
+        <div class="top-pattern-layer"></div>
+        <div class="bottom-pattern-layer"></div>
+
+    <div class="auto-container">
+        <div class="sec-title centered"><h2>Le jeu</h2><span class="bottom-curve"></span></div>
+    </div>
+    </section>
+    <?php endif; ?>
 
 
 	
