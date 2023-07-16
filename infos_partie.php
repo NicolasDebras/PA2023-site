@@ -289,8 +289,8 @@
 							tooltip.classList.toggle('shown')
 						  }
 						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
-							insertText(document.querySelector('input'), e.detail.unicode)
-						  })
+                            insertText(document.querySelector('#message-input'), e.detail.unicode);
+                          })
 						</script>
 					</div>
 				</div>
