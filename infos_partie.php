@@ -311,11 +311,9 @@
 			</div>
 		</div>
 
-		<!-- This is your own content that will be displayed in the lightbox -->
 		<div id="myContent" style="display: none; background-color: black;">
 		<section class="contact-section">
 			<div class="auto-container">
-				<!--Title-->
 				<div class="sec-title centered"><h2>Configuration</h2><span class="bottom-curve"></span></div>
 
 				<div class="form-box">
