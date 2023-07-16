@@ -286,7 +286,7 @@
 						  Popper.createPopper(button, tooltip)
 
 						  document.querySelector('#emoji-button').onclick = () => {
-							tooltip.classList.toggle('shown')
+							tooltip.classList.toggle('shown').offsetWidth;
 						  }
 						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
                             insertText(document.querySelector('#message-input'), e.detail.unicode);
@@ -320,8 +320,17 @@
 					<div class="default-form contact-form">
 						<form method="post" action="controllers/register.php" id="signup-form" enctype="multipart/form-data">
 							<div class="row clearfix">
+							    Gestion des arguments (laisser vide si pas d'arguments) :
 								<div class="col-md-12 col-sm-12 form-group">
-									<input type="text" name="arguments" placeholder="Gestion des arguments" required="">
+									<input type="text" name="arguments" placeholder="Nom (ex : boat)">
+								</div>
+								
+								<div class="col-md-12 col-sm-12 form-group">
+									<input type="text" name="arguments" placeholder="Type (ex : int)">
+								</div>
+								
+								<div class="col-md-12 col-sm-12 form-group">
+									<input type="text" name="arguments" placeholder="Valeur (ex : 5)">
 								</div>
 
 								<div class="col-md-12 col-sm-12 form-group">
