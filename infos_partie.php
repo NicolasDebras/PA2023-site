@@ -298,6 +298,7 @@
 		</div>
 	</section>
 
+    <?php if ($user_id == $party_data->Founder->id): ?>
 	<!-- Game Section -->
 	<section class="video-section">
 		<div class="image-layer" style="background-image: url(images/background/video-bg.jpg);"></div>
@@ -320,7 +321,7 @@
 					<div class="default-form contact-form">
 						<form method="post" action="controllers/register.php" id="signup-form" enctype="multipart/form-data">
 							<div class="row clearfix">
-							    Gestion des arguments (laisser vide si pas d'arguments) :
+							    <p>Gestion des arguments (laisser vide si pas d'arguments) :</p>
 								<div class="col-md-12 col-sm-12 form-group">
 									<input type="text" name="arguments" placeholder="Nom (ex : boat)">
 								</div>
@@ -332,15 +333,92 @@
 								<div class="col-md-12 col-sm-12 form-group">
 									<input type="text" name="arguments" placeholder="Valeur (ex : 5)">
 								</div>
+                                <p>Paramètres :</p>
+                                <div class="col-md-12 col-sm-12 form-group">
+                                    <input type="text" name="langage" value=".py" readonly>
+                                </div>
 
-								<div class="col-md-12 col-sm-12 form-group">
-									<input type="email" name="langage" placeholder="Langage (.py only)" required="">
-								</div>
-
-								<div class="col-md-12 col-sm-12 form-group">
-									<input type="text" name="number" placeholder="Nombre de joueurs" required="">
-								</div>
-								
+                                <div class="col-md-12 col-sm-12 form-group">
+                                    <input type="text" id="player-number" name="number" placeholder="Nombre de joueurs" required>
+                                </div>
+                                
+                                <div class="col-md-12 col-sm-12 form-group" id="player-selects"></div>
+                                
+                                <script>
+                                var players = <?php echo json_encode($party_data->accepting_participants); ?>;
+                                var currentUserId = <?php echo json_encode($user_id); ?>;
+                                
+                                document.getElementById('player-number').addEventListener('change', function() {
+                                    const numberOfPlayers = parseInt(this.value);
+                                    if (isNaN(numberOfPlayers) || numberOfPlayers < 2) {
+                                        alert("Veuillez entrer un nombre entier supérieur ou égal à 2");
+                                        return;
+                                    }
+                                
+                                    const totalNumberOfParticipants = players.filter(function(player) {
+                                        return player.player.id != currentUserId;
+                                    }).length+1;
+                                
+                                    // Si le nombre entré est supérieur au nombre total de joueurs disponibles, j'affiche une alerte
+                                    if (numberOfPlayers > totalNumberOfParticipants) {
+                                        alert("Vous ne pouvez pas entrer un nombre supérieur au nombre total de participants disponibles (" + totalNumberOfParticipants + ")");
+                                        return;
+                                    }
+                                
+                                    const playerSelectsContainer = document.getElementById('player-selects');
+                                    playerSelectsContainer.innerHTML = '';
+                                
+                                    var filteredPlayers = players.filter(function(player) {
+                                        return player.player.id != currentUserId;
+                                    });
+                                
+                                    for (let i = 0; i < numberOfPlayers - 1; i++) {
+                                        const selectElement = document.createElement('select');
+                                        selectElement.name = 'player' + (i+1);
+                                        selectElement.required = true;
+                                    
+                                        const defaultOptionElement = document.createElement('option');
+                                        defaultOptionElement.value = '';
+                                        defaultOptionElement.text = '-- Sélectionnez un joueur --';
+                                        selectElement.appendChild(defaultOptionElement);
+                                    
+                                        for (let j = 0; j < filteredPlayers.length; j++) {
+                                            const optionElement = document.createElement('option');
+                                            optionElement.value = filteredPlayers[j].player.id;
+                                            optionElement.text = filteredPlayers[j].player.username;
+                                            selectElement.appendChild(optionElement);
+                                        }
+                                    
+                                        selectElement.addEventListener('change', function() {
+                                            updatePlayerSelects();
+                                        });
+                                    
+                                        playerSelectsContainer.appendChild(selectElement);
+                                    }
+                                
+                                    function updatePlayerSelects() {
+                                        const selects = playerSelectsContainer.querySelectorAll('select');
+                                        const selectedPlayerIds = Array.from(selects).map(select => select.value);
+                                        
+                                        selects.forEach((select) => {
+                                            const currentSelectedValue = select.value;
+                                            select.innerHTML = '';
+                                
+                                            filteredPlayers.forEach(player => {
+                                                if (!selectedPlayerIds.includes(player.player.id.toString()) || player.player.id.toString() === currentSelectedValue) {
+                                                    const optionElement = document.createElement('option');
+                                                    optionElement.value = player.player.id;
+                                                    optionElement.text = player.player.username;
+                                                    select.appendChild(optionElement);
+                                                }
+                                            });
+                                            
+                                            select.value = currentSelectedValue;
+                                        });
+                                    }
+                                });
+                                </script>
+							
 								<div class="col-md-12 col-sm-12 form-group">
 										<label for="game">Importer le fichier :</label>
 										<input type="file" name="game" id="game" required>
@@ -359,7 +437,7 @@
 		</section>
 		</div>
 	</section>
-	
+	<?php endif; ?>
 
 	
 	<script>
