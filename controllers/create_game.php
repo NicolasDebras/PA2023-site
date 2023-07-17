@@ -39,6 +39,7 @@ if (isset($_COOKIE['auth_token']) && !empty($_COOKIE['auth_token'])) {
         'title' => $title,
         'url_image' => $url_image,
         'founder_id' => $user_id
+        'Founder' => 'ceci est un bug que j'ai la flemme de corriger'
     );
 
     curl_setopt_array($curl, array(
