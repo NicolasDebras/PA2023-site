@@ -498,13 +498,14 @@ svg *:not(rect) {
     </section>
     <?php endif; ?>
     
-    <?php if ($party_data->started == true): ?>
+    <?php if ($party_data->started == true && $user_tag != null): ?>
     <section class="contact-section">
         <div class="top-pattern-layer"></div>
         <div class="bottom-pattern-layer"></div>
     
         <div class="auto-container">
             <div class="sec-title centered"><h2>Le jeu</h2><span class="bottom-curve"></span></div>
+        <?php if ($user_id == $party_data->Founder->id): ?>
 		<div class="form-box">
     		<div class="default-form contact-form">
 				<div class="row clearfix">
@@ -517,10 +518,10 @@ svg *:not(rect) {
         	</div>
 
         </div><br><br><br>
+        <?php endif; ?>
+        <center><div id="game-container">
     
-        <div id="game-container">
-    
-        </div>
+        </div></center>
         </div>
     </section>
     
@@ -674,7 +675,6 @@ svg *:not(rect) {
     
     </script>
     
-
     <?php endif; ?>
 
 	<script>
