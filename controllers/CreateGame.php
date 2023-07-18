@@ -93,10 +93,10 @@ if (isset($_POST['submit-form'])) {
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($http_status == 200) {
-        echo '<pre>';
+        /*echo '<pre>';
         var_dump($data);
-        echo '</pre>';
-        //header('Location: ../infos_partie.php?party_id=' . $party_id);
+        echo '</pre>';*/
+        header('Location: ../infos_partie.php?party_id=' . $party_id);
     } else {
         echo 'Error: Failed to edit the party. HTTP Status: ' . $http_status . ' Response: ' . $response;
         return;
