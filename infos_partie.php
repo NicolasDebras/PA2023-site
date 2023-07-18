@@ -134,7 +134,6 @@
             break;
         }
     }
-    echo $user_tag;
 
 ?>
 <style>
