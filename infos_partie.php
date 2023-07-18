@@ -20,7 +20,7 @@
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://nicolasdebras.fr/api/party/' . $party_id . '/',
+        CURLOPT_URL => 'https://nicolasdebras.fr/api/oneparty/' . $party_id . '/',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTPHEADER => array(
@@ -126,7 +126,25 @@
 			return 'Moins d\'une minute';
 		}
 	}
+	
+	$user_tag = null;
+    foreach ($party_data->accepting_participants as $participant) {
+        if ($participant->player->id == $user_id) {
+            $user_tag = $participant->tag_player;
+            break;
+        }
+    }
+    echo $user_tag;
+
 ?>
+<style>
+svg *:not(rect) {
+    pointer-events: none;
+}
+.player-element {
+    user-select: none;
+}
+</style>
 
 
     <section class="page-banner" style="background-image:url(images/heading.jpg);">
@@ -481,18 +499,184 @@
     <?php endif; ?>
     
     <?php if ($party_data->started == true): ?>
-    <section class="games-section">
+    <section class="contact-section">
         <div class="top-pattern-layer"></div>
         <div class="bottom-pattern-layer"></div>
+    
+        <div class="auto-container">
+            <div class="sec-title centered"><h2>Le jeu</h2><span class="bottom-curve"></span></div>
+		<div class="form-box">
+    		<div class="default-form contact-form">
+				<div class="row clearfix">
+        			<div class="col-md-12 col-sm-12 form-group">
+        				<div class="text-center">
+        					<button class="theme-btn btn-style-one" id="init-button" type="submit" name="submit-form"><span class="btn-title">Initialiser le jeu</span></button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
 
-    <div class="auto-container">
-        <div class="sec-title centered"><h2>Le jeu</h2><span class="bottom-curve"></span></div>
-    </div>
+        </div><br><br><br>
+    
+        <div id="game-container">
+    
+        </div>
+        </div>
     </section>
+    
+    <script>
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var partyId = <?php echo $party_id; ?>;
+        var gameSocket = new WebSocket(ws_scheme + '://nicolasdebras.fr/ws/game/' + partyId + '/');
+        var userId = <?php echo $user_id; ?>;
+        var username = <?php echo json_encode($username); ?>;
+        var maxPlayers = <?php echo $party_data->max_player; ?>;
+        var gameContainer = document.getElementById('game-container');
+    
+        gameSocket.onopen = function(e) {
+            console.log("Connexion avec le serveur de jeu ouverte");
+        };
+    
+        var actions = [
+            {
+                'type': 'CLICK',
+                'player': <?php echo $user_tag; ?>,
+                'x': 1,
+                'y': 2,
+                'buttons': ['RIGHT'],
+                'confirm': true
+            },
+        ];
+        var actionIndex = 0;
+    
+        gameSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            console.log("Message reçu du serveur de jeu :", data);
+            
+            if ('errors' in data) {
+                console.error(data.errors);
+            }
+            else {
+                updateGame(data);
+            }
+        };
+    
+        gameSocket.onclose = function(e) {
+            console.error('Connexion avec le serveur de jeu fermée inopinément');
+        };
+    
+        document.querySelector('#init-button').onclick = function(e) {
+            gameSocket.send(JSON.stringify({
+                'init': {
+                    'players': maxPlayers
+                }
+            }));
+        };
+    
+    function updateGame(data) {
+        while (gameContainer.firstChild) {
+            gameContainer.removeChild(gameContainer.firstChild);
+        }
+    
+        data.displays.forEach(function(display, index) {
+            if (display.player == <?php echo $user_tag; ?>) {
+                var playerElement = document.createElement('p');
+                playerElement.className = 'player-element';
+                playerElement.textContent = "Player " + (index + 1);
+            
+                var boardElement = createGameBoard(display);
+                addClickZones(boardElement, data.requested_actions);
+                playerElement.appendChild(boardElement);
+            
+                gameContainer.appendChild(playerElement);
+            }
+        });
+    
+        var gameStateElement = document.createElement('div');
+        gameStateElement.textContent = "Game Over: " + data.game_state.game_over;
+        gameContainer.appendChild(gameStateElement);
+    
+        var scoresElement = document.createElement('div');
+        scoresElement.textContent = "Scores: " + data.game_state.scores.join(', ');
+        gameContainer.appendChild(scoresElement);
+    }
+    
+    function createGameBoard(display) {
+        const gameBoard = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    
+        gameBoard.setAttribute("width", display.width);
+        gameBoard.setAttribute("height", display.height);
+    
+        display.content.forEach(item => {
+            if (item.tag === "line") {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    
+                line.setAttribute("x1", item.x1);
+                line.setAttribute("y1", item.y1);
+                line.setAttribute("x2", item.x2);
+                line.setAttribute("y2", item.y2);
+    
+                gameBoard.appendChild(line);
+            } else if (item.tag === "style") {
+                const style = document.createElement("style");
+                style.textContent = item.content;
+                gameBoard.appendChild(style);
+            } else if (item.tag === "circle") {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                
+                circle.setAttribute("cx", item.cx);
+                circle.setAttribute("cy", item.cy);
+                circle.setAttribute("r", item.r);
+                circle.setAttribute("fill", item.fill);
+    
+                gameBoard.appendChild(circle);
+            }
+        });
+    
+        return gameBoard;
+    }
+    
+    function addClickZones(gameBoard, requestedActions) {
+        console.log(requestedActions);
+        requestedActions.forEach(action => {
+            if (action.type === "CLICK") {
+                action.zones.forEach(zone => {
+                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    
+                    rect.setAttribute("x", zone.x);
+                    rect.setAttribute("y", zone.y);
+                    rect.setAttribute("width", zone.width);
+                    rect.setAttribute("height", zone.height);
+                    rect.setAttribute("fill", "transparent");
+    
+                    rect.addEventListener("click", () => {
+                        console.log(`Clicked on zone at (${zone.x}, ${zone.y})`);
+    
+                        var clickAction = {
+                            'type': 'CLICK',
+                            'player': <?php echo $user_tag; ?>,
+                            'x': zone.x,
+                            'y': zone.y,
+                            'buttons': ['RIGHT'],
+                            'confirm': true
+                        };
+    
+                        gameSocket.send(JSON.stringify({
+                            'actions': [clickAction]
+                        }));
+                    });
+    
+                    gameBoard.appendChild(rect);
+                });
+            }
+        });
+    }
+    
+    </script>
+    
+
     <?php endif; ?>
 
-
-	
 	<script>
 		function hashCode(str) {
 			var hash = 0;
@@ -597,9 +781,6 @@
 			messageInputDom.value = '';
 		};
 	</script>
-		
-
-
 	
 <?php
 	// on inclu le fichier footer.php
