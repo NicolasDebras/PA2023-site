@@ -31,7 +31,7 @@
 
 			<div class="form-box">
 				<div class="default-form contact-form">
-					<form method="post" action="controllers/create_game.php" id="create-game-form" enctype="multipart/form-data">
+					<form method="post" action="controllers/create_party.php" id="create-game-form" enctype="multipart/form-data">
 						<div class="row clearfix">
 							<div class="col-md-12 col-sm-12 form-group">
 								<input type="text" name="title" placeholder="Titre de la partie" required="">

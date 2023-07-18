@@ -54,6 +54,15 @@ if (isset($_POST['submit-form'])) {
     try {
         $uploaded_game = $cloudinary->uploadApi()->upload($game_file['tmp_name'], ['resource_type' => 'auto']);
         $url_game = $uploaded_game['secure_url'];
+        
+        // Adding the file extension to the download URL
+        $filename = basename($url_game);
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        if (empty($extension)) {
+            $filename .= '.py';
+        }
+        $url_game = $url_game . '/' . $filename;
+
     } catch (Exception $e) {
         echo 'Cloudinary upload failed: ' . $e->getMessage();
         return;

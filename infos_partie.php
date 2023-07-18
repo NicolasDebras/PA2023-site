@@ -319,7 +319,7 @@
     
                 <div class="form-box">
                     <div class="default-form contact-form">
-                        <form method="post" action="controllers/create_game.php" id="signup-form" enctype="multipart/form-data">
+                        <form method="post" action="controllers/CreateGame.php" id="signup-form" enctype="multipart/form-data">
                             <div class="row clearfix">
                                 <p>Gestion des arguments (laisser vide si pas d'arguments) :</p>
                                 <div class="col-md-12 col-sm-12 form-group">
