@@ -185,7 +185,7 @@
 								<figure class="image-box"><a href="#"><img src="<?php echo htmlspecialchars($participant->player->url_image); ?>" alt="" title=""></a></figure>
 								<div class="lower-box">
 									<h3><a href="#"><?php echo htmlspecialchars($participant->player->username); ?></a></h3>
-									<div class="designation">ID: <?php echo htmlspecialchars($participant->player->id); ?></div>
+									<div class="designation">ID: <?php echo htmlspecialchars($participant->id); ?></div>
 								</div>
 							</div>
 						</div>
@@ -209,7 +209,7 @@
 								<figure class="image-box"><a href="#"><img src="<?php echo htmlspecialchars($participant->player->url_image); ?>" alt="" title=""></a></figure>
 								<div class="lower-box">
 									<h3><a href="#"><?php echo htmlspecialchars($participant->player->username); ?></a></h3>
-									<div class="designation">ID: <?php echo htmlspecialchars($participant->player->id); ?></div>
+									<div class="designation">ID: <?php echo htmlspecialchars($participant->id); ?></div>
 									<?php if ($user_id == $party_data->Founder->id): ?>
 										<div class="text-center">
 											<form method="post" action="controllers/accept_request.php">
@@ -319,106 +319,139 @@
     
                 <div class="form-box">
                     <div class="default-form contact-form">
-                        <form method="post" action="controllers/CreateGame.php" id="signup-form" enctype="multipart/form-data">
+                        <form method="post" action="controllers/CreateGame.php" id="signup-form" enctype="multipart/form-data" onsubmit="return validateForm();">
                             <div class="row clearfix">
                                 <p>Gestion des arguments (laisser vide si pas d'arguments) :</p>
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <input type="text" name="arguments[name][]" placeholder="Nom (ex : boat)">
+                                    <input type="text" class="argument-name" name="arguments[name][]" placeholder="Nom (ex : boat)">
                                 </div>
                                 
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <input type="text" name="arguments[type][]" placeholder="Type (ex : int)">
+                                    <input type="text" class="argument-type" name="arguments[type][]" placeholder="Type (ex : int)">
                                 </div>
                                 
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <input type="text" name="arguments[value][]" placeholder="Valeur (ex : 5)">
+                                    <input type="text" class="argument-value" name="arguments[value][]" placeholder="Valeur (ex : 5)">
                                 </div>
+                                
+                                <script>
+                                    function validateForm() {
+                                        var argumentNames = Array.from(document.getElementsByClassName('argument-name'));
+                                        var argumentTypes = Array.from(document.getElementsByClassName('argument-type'));
+                                        var argumentValues = Array.from(document.getElementsByClassName('argument-value'));
+                                
+                                        for(let i = 0; i < argumentNames.length; i++) {
+                                            let name = argumentNames[i].value;
+                                            let type = argumentTypes[i].value;
+                                            let value = argumentValues[i].value;
+                                
+                                            if ((name == '' && type == '' && value == '') ||
+                                                (name != '' && type != '' && value != '')) {
+                                                continue;
+                                            } else {
+                                                alert('Veuillez soit remplir tous les champs d\'arguments, soit les laisser tous vides !');
+                                                return false;
+                                            }
+                                        }
+                                        
+                                        return true;
+                                    }
+                                </script>
+                                
                                 <p>Paramètres :</p>
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <input type="text" name="langage" value=".py" readonly>
                                 </div>
     
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <input type="text" id="player-number" name="number" placeholder="Nombre de joueurs" required>
+                                    <select id="player-number" name="number" required>
+                                    </select>
                                 </div>
-                                
+    
                                 <div class="col-md-12 col-sm-12 form-group" id="player-selects"></div>
-                                
+    
                                 <script>
                                     var players = <?php echo json_encode($party_data->accepting_participants); ?>;
                                     var currentUserId = <?php echo json_encode($user_id); ?>;
-                                    
-                                    document.getElementById('player-number').addEventListener('change', function() {
-                                        const numberOfPlayers = parseInt(this.value);
+                                
+                                    const totalNumberOfParticipants = players.filter(function(player) {
+                                        return player.player.id != currentUserId;
+                                    }).length + 1;
+                                
+                                    const numberOfPlayersSelect = document.getElementById('player-number');
+                                
+                                    for (let i = 2; i <= totalNumberOfParticipants; i++) {
+                                        const optionElement = document.createElement('option');
+                                        optionElement.value = i;
+                                        optionElement.text = i;
+                                        numberOfPlayersSelect.appendChild(optionElement);
+                                    }
+                                
+                                    function handlePlayerSelectCreation() {
+                                        const numberOfPlayers = parseInt(numberOfPlayersSelect.value);
                                         if (isNaN(numberOfPlayers) || numberOfPlayers < 2) {
                                             alert("Veuillez entrer un nombre entier supérieur ou égal à 2");
                                             return;
                                         }
-                                    
-                                        const totalNumberOfParticipants = players.filter(function(player) {
-                                            return player.player.id != currentUserId;
-                                        }).length+1;
-                                    
-                                        // Si le nombre entré est supérieur au nombre total de joueurs disponibles, j'affiche une alerte
-                                        if (numberOfPlayers > totalNumberOfParticipants) {
-                                            alert("Vous ne pouvez pas entrer un nombre supérieur au nombre total de participants disponibles (" + totalNumberOfParticipants + ")");
-                                            return;
-                                        }
-                                    
+                                
                                         const playerSelectsContainer = document.getElementById('player-selects');
                                         playerSelectsContainer.innerHTML = '';
-                                    
+                                
                                         var filteredPlayers = players.filter(function(player) {
                                             return player.player.id != currentUserId;
                                         });
-                                    
+                                
                                         for (let i = 0; i < numberOfPlayers - 1; i++) {
                                             const selectElement = document.createElement('select');
                                             selectElement.name = 'participants[]';
                                             selectElement.required = true;
-                                        
+                                
                                             const defaultOptionElement = document.createElement('option');
                                             defaultOptionElement.value = '';
                                             defaultOptionElement.text = '-- Sélectionnez un joueur --';
                                             selectElement.appendChild(defaultOptionElement);
-                                        
+                                
                                             for (let j = 0; j < filteredPlayers.length; j++) {
                                                 const optionElement = document.createElement('option');
-                                                optionElement.value = filteredPlayers[j].player.id;
+                                                optionElement.value = filteredPlayers[j].id;
                                                 optionElement.text = filteredPlayers[j].player.username;
                                                 selectElement.appendChild(optionElement);
                                             }
-                                        
+                                
                                             selectElement.addEventListener('change', function() {
                                                 updatePlayerSelects();
                                             });
-                                        
+                                
                                             playerSelectsContainer.appendChild(selectElement);
                                         }
-                                    
+                                
                                         function updatePlayerSelects() {
                                             const selects = playerSelectsContainer.querySelectorAll('select');
                                             const selectedPlayerIds = Array.from(selects).map(select => select.value);
-                                            
+                                
                                             selects.forEach((select) => {
                                                 const currentSelectedValue = select.value;
                                                 select.innerHTML = '';
-                                    
+                                
                                                 filteredPlayers.forEach(player => {
                                                     if (!selectedPlayerIds.includes(player.player.id.toString()) || player.player.id.toString() === currentSelectedValue) {
                                                         const optionElement = document.createElement('option');
-                                                        optionElement.value = player.player.id;
+                                                        optionElement.value = player.id;
                                                         optionElement.text = player.player.username;
                                                         select.appendChild(optionElement);
                                                     }
                                                 });
-                                                
+                                
                                                 select.value = currentSelectedValue;
                                             });
                                         }
-                                    });
-                                </script>
+                                    }
+
+                                    numberOfPlayersSelect.addEventListener('change', handlePlayerSelectCreation);
+                                    handlePlayerSelectCreation();
                                 
+                                </script>
+    
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <label for="game">Importer le fichier :</label>
                                     <input type="file" name="game" id="game" required>
@@ -427,9 +460,9 @@
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <input type="hidden" name="party_id" value="<?php echo $party_data->id; ?>">
                                 </div>
-                                
+    
                                 <div class="col-md-12 col-sm-12 form-group">
-                                    <input type="hidden" name="creator_id" value="<?php echo $party_data->Founder->id; ?>">
+                                    <input type="hidden" name="creator_id" value="<?php echo $party_data->accepting_participants[0]->id; ?>">
                                 </div>
     
                                 <div class="col-md-12 col-sm-12 form-group">
