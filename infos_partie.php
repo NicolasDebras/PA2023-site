@@ -134,7 +134,7 @@
             break;
         }
     }
-
+    echo '<script>var gameData = ' . json_encode($party_data) . ';</script>';
 ?>
 <style>
 svg *:not(rect) {
@@ -560,16 +560,30 @@ svg *:not(rect) {
                 updateGame(data);
             }
         };
+        
+        gameSocket.onerror = function(error) {
+          console.error("Erreur sur le WebSocket de jeu:", error);
+        };
     
         gameSocket.onclose = function(e) {
             console.error('Connexion avec le serveur de jeu fermée inopinément');
         };
     
         document.querySelector('#init-button').onclick = function(e) {
+            
+            // Préparation de l'objet init
+            let initObject = {
+                'players': maxPlayers
+            };
+            
+            if (gameData.fk_game_argument && gameData.fk_game_argument.length > 0) {
+                gameData.fk_game_argument.forEach(argument => {
+                    initObject[argument.name] = argument.value;
+                });
+            }
+        
             gameSocket.send(JSON.stringify({
-                'init': {
-                    'players': maxPlayers
-                }
+                'init': initObject
             }));
         };
     
@@ -752,6 +766,10 @@ svg *:not(rect) {
 
 		  document.querySelector('#message-container').appendChild(messageElement);
 		};
+		
+		chatSocket.onerror = function(error) {
+          console.error("Erreur sur le WebSocket de chat:", error);
+        };
 
 
 		setInterval(function() {
