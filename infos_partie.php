@@ -537,18 +537,6 @@ svg *:not(rect) {
             console.log("Connexion avec le serveur de jeu ouverte");
         };
     
-        var actions = [
-            {
-                'type': 'CLICK',
-                'player': <?php echo $user_tag; ?>,
-                'x': 1,
-                'y': 2,
-                'buttons': ['RIGHT'],
-                'confirm': true
-            },
-        ];
-        var actionIndex = 0;
-    
         gameSocket.onmessage = function(e) {
             var data = JSON.parse(e.data);
             //console.log("Message reçu du serveur de jeu :", data);
@@ -626,6 +614,7 @@ svg *:not(rect) {
             
                 var boardElement = createGameBoard(display);
                 addClickZones(boardElement, data.requested_actions);
+                addKeyAndTextInputListeners(boardElement, data.requested_actions);
                 playerElement.appendChild(boardElement);
             
                 gameContainer.appendChild(playerElement);
@@ -728,6 +717,44 @@ svg *:not(rect) {
     
                     gameBoard.appendChild(rect);
                 });
+            }
+        });
+    }
+    
+    function addKeyAndTextInputListeners(gameBoard, requestedActions) {
+        requestedActions.forEach(action => {
+            if (action.type === "KEY") {
+                document.addEventListener('keydown', function(e) {
+                    const key = e.key.toUpperCase();
+                    if (action.keys.includes(key)) {
+    
+                        var keyAction = {
+                            'type': 'KEY',
+                            'player': <?php echo $user_tag; ?>,
+                            'key': key,
+                            'confirm': action.confirm || false
+                        };
+    
+                        gameSocket.send(JSON.stringify({
+                            'actions': [keyAction]
+                        }));
+                    }
+                });
+            } else if (action.type === "TEXT") {
+                const input = window.prompt('Merci d''entrer le texte');
+                if (input && input.length <= action.max_length) {
+    
+                    var textAction = {
+                        'type': 'TEXT',
+                        'player': <?php echo $user_tag; ?>,
+                        'text': input,
+                        'confirm': action.confirm || false
+                    };
+    
+                    gameSocket.send(JSON.stringify({
+                        'actions': [textAction]
+                    }));
+                }
             }
         });
     }
