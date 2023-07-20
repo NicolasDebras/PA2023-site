@@ -76,12 +76,6 @@
 	
     curl_close($curl);
 	
-	if (isset($username)) {
-		echo '<script>console.log("username est défini : ", ' . json_encode($username) . ')</script>';
-	} else {
-		echo '<script>console.log("username n\'est pas défini.")</script>';
-	}
-	
 	$user_id = $user_data->id;
     $username = $user_data->username;
 	
@@ -625,7 +619,7 @@ svg *:not(rect) {
 
     
     function addClickZones(gameBoard, requestedActions) {
-        console.log(requestedActions);
+        //console.log(requestedActions);
         requestedActions.forEach(action => {
             if (action.type === "CLICK") {
                 action.zones.forEach(zone => {
@@ -638,7 +632,6 @@ svg *:not(rect) {
                     rect.setAttribute("fill", "transparent");
     
                     rect.addEventListener("click", () => {
-                        console.log(`Clicked on zone at (${zone.x}, ${zone.y})`);
     
                         var clickAction = {
                             'type': 'CLICK',
@@ -800,7 +793,7 @@ svg *:not(rect) {
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
 		var chatSocket = new WebSocket(ws_scheme + '://nicolasdebras.fr/ws/chat/' + partyId + '/');
-		console.log(chatSocket);
+		//console.log(chatSocket);
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
@@ -839,10 +832,6 @@ svg *:not(rect) {
 
 		  document.querySelector('#message-container').appendChild(messageElement);
 		};
-		
-		chatSocket.onerror = function(error) {
-          console.error("Erreur sur le WebSocket de chat:", error);
-        };
 
 
 		setInterval(function() {
