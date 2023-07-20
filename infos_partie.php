@@ -254,67 +254,6 @@ svg *:not(rect) {
 		</div>
 	</section>
 
-	<!-- Chat Section -->
-	<section class="contact-section">
-		<div class="container py-5">
-			<div class="row justify-content-center">
-				<div class="col-lg-8">
-					<div class="card">
-						<div class="card-header bg-primary text-white">
-							<h4 class="card-title mb-0">Chat en direct</h4>
-						</div>
-						<div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
-							<?php if ($messages !== null): ?>
-								<?php foreach ($messages as $message): ?>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>"><?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?></div>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>">
-										<?php 
-										$date = new DateTime($message->timestamp, new DateTimeZone('UTC'));
-										echo relativeDate($date);
-										?>
-									</div>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
-										<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-											<?php echo htmlspecialchars($message->content); ?>
-											<span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
-										</div>
-									</div>
-								<?php endforeach; ?>
-							<?php endif; ?>
-						</div>
-						<div class="card-footer">
-							<div class="input-group">
-								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici" required="">
-								<div class="input-group-append">
-									<button id="emoji-button" class="btn btn-secondary">😀</button>
-									<div class="tooltip" role="tooltip">
-										<emoji-picker></emoji-picker>
-									</div>
-									<button id="send-button" class="btn btn-primary">Envoyer</button>
-								</div>
-							</div>
-						</div>
-						<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-						<script type="module">
-						  import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
-						  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
-						  const button = document.querySelector('#emoji-button')
-						  const tooltip = document.querySelector('.tooltip')
-						  Popper.createPopper(button, tooltip)
-
-						  document.querySelector('#emoji-button').onclick = () => {
-							tooltip.classList.toggle('shown').offsetWidth;
-						  }
-						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
-                            insertText(document.querySelector('#message-input'), e.detail.unicode);
-                          })
-						</script>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
     <?php if ($user_id == $party_data->Founder->id): ?>
     <!-- Game Section -->
     <section class="video-section">
@@ -741,7 +680,7 @@ svg *:not(rect) {
                     }
                 });
             } else if (action.type === "TEXT") {
-                const input = window.prompt('Merci d''entrer le texte');
+                const input = window.prompt('Entrez le texte :');
                 if (input && input.length <= action.max_length) {
     
                     var textAction = {
@@ -762,6 +701,67 @@ svg *:not(rect) {
     </script>
     
     <?php endif; ?>
+    
+    <!-- Chat Section -->
+	<section class="contact-section">
+		<div class="container py-5">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="card">
+						<div class="card-header bg-primary text-white">
+							<h4 class="card-title mb-0">Chat</h4>
+						</div>
+						<div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
+							<?php if ($messages !== null): ?>
+								<?php foreach ($messages as $message): ?>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>"><?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?></div>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>">
+										<?php 
+										$date = new DateTime($message->timestamp, new DateTimeZone('UTC'));
+										echo relativeDate($date);
+										?>
+									</div>
+									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
+										<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+											<?php echo htmlspecialchars($message->content); ?>
+											<span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
+										</div>
+									</div>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</div>
+						<div class="card-footer">
+							<div class="input-group">
+								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici" required="">
+								<div class="input-group-append">
+									<button id="emoji-button" class="btn btn-secondary">😀</button>
+									<div class="tooltip" role="tooltip">
+										<emoji-picker></emoji-picker>
+									</div>
+									<button id="send-button" class="btn btn-primary">Envoyer</button>
+								</div>
+							</div>
+						</div>
+						<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+						<script type="module">
+						  import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
+						  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
+						  const button = document.querySelector('#emoji-button')
+						  const tooltip = document.querySelector('.tooltip')
+						  Popper.createPopper(button, tooltip)
+
+						  document.querySelector('#emoji-button').onclick = () => {
+							tooltip.classList.toggle('shown').offsetWidth;
+						  }
+						  document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
+                            insertText(document.querySelector('#message-input'), e.detail.unicode);
+                          })
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 	<script>
 		function hashCode(str) {
