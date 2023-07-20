@@ -551,19 +551,45 @@ svg *:not(rect) {
     
         gameSocket.onmessage = function(e) {
             var data = JSON.parse(e.data);
-            console.log("Message reçu du serveur de jeu :", data);
+            //console.log("Message reçu du serveur de jeu :", data);
             
             if ('errors' in data) {
-                console.error(data.errors);
+                handleErrors(data.errors);
             }
             else {
                 updateGame(data);
             }
         };
         
-        gameSocket.onerror = function(error) {
-          console.error("Erreur sur le WebSocket de jeu:", error);
-        };
+        function handleErrors(errors) {
+            errors.forEach(function(error) {
+                switch (error.type) {
+                    case 'BAD_FORMAT':
+                        alert("Erreur de format de données. Merci de vérifier");
+                        break;
+                    case 'MISSING_ARGUMENT':
+                        alert("Il manque l'argument : " + error.arg +". Merci de vérifier");
+                        break;
+                    case 'INCORRECT_VALUE':
+                        alert("Valeur mauvaise pour l'argument : " + error.arg + ". Valeur donnée : " + error.value);
+                        break;
+                    case 'UNEXPECTED_ARGUMENT':
+                        alert("Argument faux : " + error.argname + ". Valeur donnée : " + error.value);
+                        break;
+                    case 'UNEXPECTED_ACTION':
+                        alert("Action inattendue par le joueur : " + error.player + ". Action donnée : " + JSON.stringify(error.action));
+                        break;
+                    case 'MISSING_ACTION':
+                        alert("Il manque l'action du joueur : " + error.player + ". Action demandée à l'autre joueur  : " + JSON.stringify(error.requested_action));
+                        break;
+                    case 'WRONG_ACTION':
+                        alert("Erreur sur l'action du joueur : " + error.player + ". Eerreur : " + error.subtype + ". Action donnée : " + JSON.stringify(error.action) + ". Action demandée au joueur : " + JSON.stringify(error.requested_action));
+                        break;
+                    default:
+                        alert("Erreur inconnue :" + JSON.stringify(error));
+                }
+            });
+        }
     
         gameSocket.onclose = function(e) {
             console.error('Connexion avec le serveur de jeu fermée inopinément');
@@ -637,18 +663,38 @@ svg *:not(rect) {
                 gameBoard.appendChild(style);
             } else if (item.tag === "circle") {
                 const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                
+    
                 circle.setAttribute("cx", item.cx);
                 circle.setAttribute("cy", item.cy);
                 circle.setAttribute("r", item.r);
                 circle.setAttribute("fill", item.fill);
     
                 gameBoard.appendChild(circle);
+            } else if (item.tag === "rect") {
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    
+                rect.setAttribute("x", item.x);
+                rect.setAttribute("y", item.y);
+                rect.setAttribute("width", item.width);
+                rect.setAttribute("height", item.height);
+                rect.setAttribute("fill", item.fill);
+    
+                gameBoard.appendChild(rect);
+            } else if (item.tag === "text") {
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    
+                text.setAttribute("x", item.x);
+                text.setAttribute("y", item.y);
+                text.setAttribute("fill", item.fill);
+                text.textContent = item.content;
+    
+                gameBoard.appendChild(text);
             }
         });
     
         return gameBoard;
     }
+
     
     function addClickZones(gameBoard, requestedActions) {
         console.log(requestedActions);
