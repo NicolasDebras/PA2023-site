@@ -47,7 +47,7 @@
             <div class="auto-container">
                 <div class="inner-container clearfix">
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.php">Home</a></li>
                         <li><a>Compte</a></li>
                         <li>Amis</li>
                     </ul>

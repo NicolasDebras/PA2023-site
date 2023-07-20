@@ -10,8 +10,8 @@
             <div class="auto-container">
                 <div class="inner-container clearfix">
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">About</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a>A propos</a></li>
                         <li>Notre équipe</li>
                     </ul>
                     <h1>Notre équipe</h1>

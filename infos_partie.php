@@ -147,7 +147,7 @@ svg *:not(rect) {
             <div class="auto-container">
                 <div class="inner-container clearfix">
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.php">Home</a></li>
                         <li><a>Partie</a></li>
                         <li>Infos</li>
                     </ul>
@@ -355,15 +355,15 @@ svg *:not(rect) {
                                             const selectElement = document.createElement('select');
                                             selectElement.name = 'participants[]';
                                             selectElement.required = true;
-                                
+                                        
                                             const defaultOptionElement = document.createElement('option');
                                             defaultOptionElement.value = '';
                                             defaultOptionElement.text = '-- Sélectionnez un joueur --';
                                             selectElement.appendChild(defaultOptionElement);
-                                
+                                        
                                             for (let j = 0; j < filteredPlayers.length; j++) {
                                                 const optionElement = document.createElement('option');
-                                                optionElement.value = filteredPlayers[j].id;
+                                                optionElement.value = filteredPlayers[j].player.id;
                                                 optionElement.text = filteredPlayers[j].player.username;
                                                 selectElement.appendChild(optionElement);
                                             }
@@ -378,20 +378,20 @@ svg *:not(rect) {
                                         function updatePlayerSelects() {
                                             const selects = playerSelectsContainer.querySelectorAll('select');
                                             const selectedPlayerIds = Array.from(selects).map(select => select.value);
-                                
+                                    
                                             selects.forEach((select) => {
                                                 const currentSelectedValue = select.value;
                                                 select.innerHTML = '';
-                                
+                                    
                                                 filteredPlayers.forEach(player => {
                                                     if (!selectedPlayerIds.includes(player.player.id.toString()) || player.player.id.toString() === currentSelectedValue) {
                                                         const optionElement = document.createElement('option');
-                                                        optionElement.value = player.id;
+                                                        optionElement.value = player.player.id;
                                                         optionElement.text = player.player.username;
                                                         select.appendChild(optionElement);
                                                     }
                                                 });
-                                
+                                    
                                                 select.value = currentSelectedValue;
                                             });
                                         }
