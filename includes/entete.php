@@ -79,9 +79,9 @@ include 'controllers/back.php';
 							<div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
 								<ul class="navigation clearfix">
 									<li><a href="index.php">Accueil</a></li>
-									<li class="dropdown"><a href="about.php">A propos</a>
+									<li class="dropdown"><a >A propos</a>
 										<ul>
-											<li><a href="about.php">A propos de nous</a></li>
+											<li><a>A propos de nous</a></li>
 											<li><a href="team.php">Notre équipe</a></li>
 										</ul>
 									</li>
