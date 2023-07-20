@@ -68,12 +68,40 @@
 						<div class="inner-box">
 							<div class="image-box">
 								<figure class="image"><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>"><img src="<?php echo htmlspecialchars($party->url_image); ?>" alt="" title=""></a></figure>
-								<div class="link-box">
-									<a href="controllers/join_party.php?party_id=<?php echo htmlspecialchars($party->id); ?>&user_id=<?php echo $_COOKIE['user_id']; ?>" class="link-btn">
-										<span class="btn-title">Rejoindre la partie</span>
-									</a>
-								</div>
-							</div>
+                                    <div class="link-box">
+                                        <?php
+                                        $isUserInParty = false;
+                                        
+                                        foreach ($party->accepting_participants as $participant) {
+                                            if ($participant->player->id == $_COOKIE['user_id']) {
+                                                $isUserInParty = true;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        foreach ($party->pending_participants as $participant) {
+                                            if ($participant->player->id == $_COOKIE['user_id']) {
+                                                $isUserInParty = true;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        if ($isUserInParty) {
+                                            ?>
+                                            <a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>" class="link-btn">
+                                                <span class="btn-title">Accéder à la partie</span>
+                                            </a>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <a href="controllers/join_party.php?party_id=<?php echo htmlspecialchars($party->id); ?>&user_id=<?php echo $_COOKIE['user_id']; ?>" class="link-btn">
+                                                <span class="btn-title">Rejoindre la partie</span>
+                                            </a>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                    	        </div>
 							<div class="lower-content">
 								<h3><a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>"><?php echo htmlspecialchars($party->title); ?></a></h3>
 								<div class="text">Créé par : <?php echo htmlspecialchars($party->Founder->username); ?></div>
