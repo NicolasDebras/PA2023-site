@@ -704,25 +704,27 @@ svg *:not(rect) {
 						<div class="card-header bg-primary text-white">
 							<h4 class="card-title mb-0">Chat</h4>
 						</div>
-						<div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
-							<?php if ($messages !== null): ?>
-								<?php foreach ($messages as $message): ?>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>"><?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?></div>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>">
-										<?php 
-										$date = new DateTime($message->timestamp, new DateTimeZone('UTC'));
-										echo relativeDate($date);
-										?>
-									</div>
-									<div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
-										<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-											<?php echo htmlspecialchars($message->content); ?>
-											<span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
-										</div>
-									</div>
-								<?php endforeach; ?>
-							<?php endif; ?>
-						</div>
+                        <div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
+                            <?php if ($messages !== null): ?>
+                                <?php foreach ($messages as $message): ?>
+                                    <div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>">
+                                        <?php echo $message->sender->id == $user_id ? 'Vous' : $message->sender->username;?>
+                                    </div>
+                                    <div class="timestamp d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?>" data-timestamp="<?php echo strtotime($message->timestamp); ?>">
+                                        <?php 
+                                        $date = new DateTime($message->timestamp, new DateTimeZone('UTC'));
+                                        echo relativeDate($date);
+                                        ?>
+                                    </div>
+                                    <div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
+                                        <div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+                                            <?php echo htmlspecialchars($message->content); ?>
+                                            <span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
 						<div class="card-footer">
 							<div class="input-group">
 								<input id="message-input" type="text" class="form-control" placeholder="Entrez votre message ici" required="">
@@ -765,35 +767,35 @@ svg *:not(rect) {
 			return hash;
 		}
 		
-		function timeSince(date) {
-		  var seconds = Math.floor((new Date() - date) / 1000);
-		  var interval = Math.floor(seconds / 31536000);
-		  if (interval > 1) {
-			return "Il y a" + interval + " ans";
-		  }
-		  interval = Math.floor(seconds / 2592000);
-		  if (interval > 1) {
-			return "Il y a" + interval + " mois";
-		  }
-		  interval = Math.floor(seconds / 86400);
-		  if (interval > 1) {
-			return "Il y a" + interval + " jours";
-		  }
-		  interval = Math.floor(seconds / 3600);
-		  if (interval > 1) {
-			return "Il y a" + interval + " heures";
-		  }
-		  interval = Math.floor(seconds / 60);
-		  if (interval > 1) {
-			return "Il y a" + interval + " minutes";
-		  }
-		  return "Moins d'une minute";
-		}
+        function timeSince(date) {
+            var seconds = Math.floor((new Date() - date) / 1000);
+            var interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) {
+                return "Il y a " + interval + " ans";
+            }
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) {
+                return "Il y a " + interval + " mois";
+            }
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) {
+                return "Il y a " + interval + " jours";
+            }
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) {
+                return "Il y a " + interval + " heures";
+            }
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) {
+                return "Il y a " + interval + " minutes";
+            }
+            return "Moins d'une minute";
+        }
+
 
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 		var partyId = <?php echo $party_id; ?>;
 		var chatSocket = new WebSocket(ws_scheme + '://nicolasdebras.fr/ws/chat/' + partyId + '/');
-		//console.log(chatSocket);
 		var senderId = <?php echo $user_id; ?>;
 		var username = <?php echo json_encode($username); ?>;
 
@@ -801,47 +803,50 @@ svg *:not(rect) {
 			console.log("Connection avec le chat ouverte");
 		};
 
-		chatSocket.onmessage = function(e) {
-		  var data = JSON.parse(e.data);
-		  var message = data['message'];
-		  var sender = data['username'];
-		  var senderIdInMessage = data['sender_id'];
-		  var timestamp = new Date(data['timestamp']);
+        chatSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            var sender = data['username'];
+            var senderIdInMessage = data['sender_id'];
+            var timestamp = new Date();
+        
+            var messageElement = document.createElement('div');
+        
+            if(senderIdInMessage == senderId) {
+                messageElement.classList.add("message-sent");
+                messageElement.innerHTML = `<div class="d-flex justify-content-end">Vous</div>
+                                            <div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-end">${timeSince(timestamp)}</div>
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+                                                    ${message}
+                                                </div>
+                                            </div>`;
+            } else {
+                messageElement.classList.add("message-received");
+                messageElement.innerHTML = `<div class="d-flex justify-content-start">${sender}</div>
+                                            <div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-start">${timeSince(timestamp)}</div>
+                                            <div class="d-flex justify-content-start mb-3">
+                                                <div class="msg_cotainer_send bg-primary text-white p-2 rounded">
+                                                    ${message}
+                                                </div>
+                                            </div>`;
+            }
+        
+            document.querySelector('#message-container').appendChild(messageElement);
+        };
 
-		  var messageElement = document.createElement('div');
-
-		  if(senderIdInMessage == senderId) {
-			messageElement.classList.add("message-sent");
-			messageElement.innerHTML = `<div class="d-flex justify-content-end">Vous</div>
-										<div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-end">${timeSince(timestamp)}</div>
-										<div class="d-flex justify-content-end mb-3">
-											<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-												${message}
-											</div>
-										</div>`;
-		  } else {
-			messageElement.classList.add("message-received");
-			messageElement.innerHTML = `<div class="d-flex justify-content-start">${sender}</div>
-										<div data-timestamp="${timestamp.getTime()}" class="timestamp d-flex justify-content-start">${timeSince(timestamp)}</div>
-										<div class="d-flex justify-content-start mb-3">
-											<div class="msg_cotainer_send bg-primary text-white p-2 rounded">
-												${message}
-											</div>
-										</div>`;
-		  }
-
-		  document.querySelector('#message-container').appendChild(messageElement);
-		};
-
-
-		setInterval(function() {
-		  var timestampElements = document.querySelectorAll('.timestamp');
-
-		  timestampElements.forEach(function(element) {
-			var timestamp = new Date(parseInt(element.getAttribute('data-timestamp')));
-			element.textContent = timeSince(timestamp);
-		  });
-		}, 5000);
+        setInterval(function() {
+            var timestampElements = document.querySelectorAll('.timestamp');
+        
+            timestampElements.forEach(function(element) {
+                var timestamp = parseInt(element.getAttribute('data-timestamp'));
+                if (timestamp.toString().length < 13) {
+                    timestamp *= 1000;
+                }
+                var date = new Date(timestamp);
+                element.textContent = timeSince(date);
+            });
+        }, 5000);
 
 		chatSocket.onclose = function(e) {
 			console.error('Chat socket closed unexpectedly');
