@@ -391,7 +391,6 @@ figure{
 	background-color:rgba(0,0,0,0); 
 	background-position:center center; 
 	background-repeat:no-repeat; 
-	background-image:url(../images/icons/preloader.svg);
 	-webkit-transition: all 200ms ease;
 	-moz-transition: all 200ms ease;
 	-ms-transition: all 200ms ease;
@@ -2067,7 +2066,6 @@ img{
 	top: -73px;
 	width: 100%;
 	height: 74px;
-	background:url(../images/background/pattern-1.png) center bottom repeat-x;
 	z-index: 2;
 }
 
@@ -2078,7 +2076,6 @@ img{
 	bottom: -73px;
 	width: 100%;
 	height: 74px;
-	background:url(../images/background/pattern-2.png) center top repeat-x;
 	z-index: 2;
 }
 
@@ -2674,7 +2671,6 @@ img{
 	top: -73px;
 	width: 100%;
 	height: 74px;
-	background:url(../images/background/pattern-1-dark.png) center bottom repeat-x;
 	z-index: 2;
 }
 
@@ -3855,7 +3851,6 @@ img{
 	width: 24px;
 	height: 24px;
 	vertical-align: middle;
-	background:url(../images/icons/logo-icon.png) left top no-repeat;
 	background-size: 20px 20px;
 	margin-right: 10px;
 }
