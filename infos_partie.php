@@ -129,6 +129,7 @@
         }
     }
     echo '<script>var gameData = ' . json_encode($party_data) . ';</script>';
+
 ?>
 <style>
 svg *:not(rect) {
@@ -363,7 +364,7 @@ svg *:not(rect) {
                                         
                                             for (let j = 0; j < filteredPlayers.length; j++) {
                                                 const optionElement = document.createElement('option');
-                                                optionElement.value = filteredPlayers[j].player.id;
+                                                optionElement.value = filteredPlayers[j].id;
                                                 optionElement.text = filteredPlayers[j].player.username;
                                                 selectElement.appendChild(optionElement);
                                             }
@@ -386,7 +387,7 @@ svg *:not(rect) {
                                                 filteredPlayers.forEach(player => {
                                                     if (!selectedPlayerIds.includes(player.player.id.toString()) || player.player.id.toString() === currentSelectedValue) {
                                                         const optionElement = document.createElement('option');
-                                                        optionElement.value = player.player.id;
+                                                        optionElement.value = player.id;
                                                         optionElement.text = player.player.username;
                                                         select.appendChild(optionElement);
                                                     }
@@ -410,7 +411,7 @@ svg *:not(rect) {
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <input type="hidden" name="party_id" value="<?php echo $party_data->id; ?>">
                                 </div>
-    
+
                                 <div class="col-md-12 col-sm-12 form-group">
                                     <input type="hidden" name="creator_id" value="<?php echo $party_data->accepting_participants[0]->id; ?>">
                                 </div>
@@ -465,6 +466,7 @@ svg *:not(rect) {
         var username = <?php echo json_encode($username); ?>;
         var maxPlayers = <?php echo $party_data->max_player; ?>;
         var gameContainer = document.getElementById('game-container');
+        var gameOver = false;
     
         gameSocket.onopen = function(e) {
             console.log("Connexion avec le serveur de jeu ouverte");
@@ -535,6 +537,48 @@ svg *:not(rect) {
         };
     
     function updateGame(data) {
+        if (data.game_state.game_over) {
+            if (typeof lastPlayer !== 'undefined') {
+                let party_data = <?php echo json_encode($party_data); ?>;
+                for(let participant of party_data.accepting_participants) {
+                    if(participant.tag_player === lastPlayer) {
+                        lastPlayerId = participant.id;
+                        break;
+                    }
+                }
+                
+                alert("Le joueur " + lastPlayer + " a gagné !");
+                
+                var myHeaders = new Headers();
+                myHeaders.append("Authorization", "Token " + "<?php echo $auth_token; ?>");
+                
+                fetch('https://api-pa2023.herokuapp.com/api/addpoint/55/' + lastPlayerId + '/', {
+                    method: 'PATCH',
+                    headers: myHeaders,
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+                        
+                document.cookie = "lastPlayer=" + lastPlayer;
+            } else {
+                var lastPlayerCookie = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('lastPlayer='))
+                    .split('=')[1];
+                alert("Le joueur " + lastPlayerCookie + " a gagné !");
+            }
+            gameOver = true;
+        } else {
+            // on supprime le cookie de manière un peu tordu
+            document.cookie = "lastPlayer= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+            gameOver = false;
+        }
+
+        //if (gameOver) return;
+        
         while (gameContainer.firstChild) {
             gameContainer.removeChild(gameContainer.firstChild);
         }
@@ -559,8 +603,14 @@ svg *:not(rect) {
         gameContainer.appendChild(gameStateElement);
     
         var scoresElement = document.createElement('div');
-        scoresElement.textContent = "Scores: " + data.game_state.scores.join(', ');
+        scoresElement.textContent = "Scores: Joueur 1: " + data.game_state.scores.join(', Joueur 2: ');
         gameContainer.appendChild(scoresElement);
+        
+        if (data.game_state.game_over == false) {
+            if ('requested_actions' in data) {
+                notifyNextPlayer(data.requested_actions);
+            }
+        }
     }
     
     function createGameBoard(display) {
@@ -619,7 +669,6 @@ svg *:not(rect) {
 
     
     function addClickZones(gameBoard, requestedActions) {
-        //console.log(requestedActions);
         requestedActions.forEach(action => {
             if (action.type === "CLICK") {
                 action.zones.forEach(zone => {
@@ -630,6 +679,7 @@ svg *:not(rect) {
                     rect.setAttribute("width", zone.width);
                     rect.setAttribute("height", zone.height);
                     rect.setAttribute("fill", "transparent");
+                    lastPlayer = action.player;
     
                     rect.addEventListener("click", () => {
     
@@ -666,6 +716,8 @@ svg *:not(rect) {
                             'key': key,
                             'confirm': action.confirm || false
                         };
+                        
+                        lastPlayer = clickAction.player;
     
                         gameSocket.send(JSON.stringify({
                             'actions': [keyAction]
@@ -691,6 +743,22 @@ svg *:not(rect) {
         });
     }
     
+    function notifyNextPlayer(requestedActions) {
+        var toastElement = document.getElementById('turnToast');
+        var toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+    
+        requestedActions.forEach(action => {
+            if (action.player == <?php echo $user_tag; ?>) {
+                document.getElementById('turnText').textContent = "C'est à vous de jouer!";
+            } else {
+                document.getElementById('turnText').textContent = "C'est au joueur " + action.player + " de jouer";
+            }
+        });
+    
+        toast.show();
+    }
+
+
     </script>
     
     <?php endif; ?>

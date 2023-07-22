@@ -39,6 +39,8 @@ include 'controllers/back.php';
 </head>
 
 <body>
+    
+
 
 <div class="page-wrapper">
     <!-- Preloader -->
@@ -196,4 +198,16 @@ include 'controllers/back.php';
 		</style>
 
     </header>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="turnToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="turnText">
+        </div>
+    </div>
+</div>
+
     <!-- End Main Header -->
