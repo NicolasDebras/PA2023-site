@@ -449,12 +449,11 @@ svg *:not(rect) {
         			</div>
         		</div>
         	</div>
-
         </div><br><br><br>
         <?php endif; ?>
-        <center><div id="game-container">
-    
-        </div></center>
+            <center><div id="game-container">
+                </div>
+            </center>
         </div>
     </section>
     
@@ -763,14 +762,34 @@ svg *:not(rect) {
     
     <?php endif; ?>
     
+    <!-- c'est juste pour les couleurs du chat -->
+    <style>
+        .card {
+            background-color: #444;
+        }
+        .msg_cotainer_send {
+            background-color: #555;
+        }
+        .btn-primary {
+            background-color: #666;
+        }
+        .btn-secondary {
+            background-color: #777;
+        }
+        .bg-primary {
+            background-color: #fd7e14 !important;
+        }
+    </style>
+
+    
     <!-- Chat Section -->
 	<section class="contact-section">
 		<div class="container py-5">
 			<div class="row justify-content-center">
-				<div class="col-lg-8">
+				<div class="col-lg-4">
 					<div class="card">
 						<div class="card-header bg-primary text-white">
-							<h4 class="card-title mb-0">Chat</h4>
+							<h4 class="card-title mb-0 text-center">Chat</h4>
 						</div>
                         <div id="message-container" class="card-body chat-body p-4" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc;">
                             <?php if ($messages !== null): ?>
@@ -787,7 +806,6 @@ svg *:not(rect) {
                                     <div class="d-flex justify-content-<?php echo $message->sender->id == $user_id ? 'end' : 'start'; ?> mb-3">
                                         <div class="msg_cotainer_send bg-primary text-white p-2 rounded">
                                             <?php echo htmlspecialchars($message->content); ?>
-                                            <span class="msg_time_send"><?php echo date('d M Y H:i:s', strtotime($message->timestamp)); ?></span>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
