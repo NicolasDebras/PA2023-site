@@ -36,6 +36,35 @@
 			$message = "Une erreur s'est produite (Code : " . $status . "). Veuillez réessayer.";
 		}
 	}
+	
+    $all_users = [];
+    $next_page_url = 'https://api-pa2023.herokuapp.com/api/player/';
+    
+    do {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $next_page_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_HTTPHEADER => array(
+            'Authorization: Token ' . $auth_token
+          ),
+          CURLOPT_FOLLOWLOCATION => true,
+        ));
+    
+        $response = curl_exec($curl);
+        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    
+        if ($http_status == 200) {
+            $page_data = json_decode($response);
+            $all_users = array_merge($all_users, $page_data->results);
+            $next_page_url = $page_data->next;
+        } else {
+            echo 'Unexpected HTTP status: ' . $http_status;
+            $next_page_url = null;
+        }
+    
+        curl_close($curl);
+    } while ($next_page_url !== null);
 
 ?>
 
@@ -90,12 +119,20 @@
 				<div class="default-form contact-form">
 					<form method="post" action="controllers/add_friend.php">
 						<div class="row clearfix">
-							<div class="col-md-12 col-sm-12 form-group">
-								<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-								<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
-								<input type="text" name="friend_username" placeholder="Pseudo de l'ami" required="">
-							</div>
-
+                        <div class="col-md-12 col-sm-12 form-group">
+                        	<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        	<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
+                        	<select name="friend_username" required>
+                        		<option value="">Choisissez un ami...</option>
+                                <?php if (!empty($all_users)): ?>
+                                	<?php foreach ($all_users as $user): ?>
+                                		<option value="<?php echo htmlspecialchars($user->username); ?>">
+                                			<?php echo htmlspecialchars($user->username); ?>
+                                		</option>
+                                	<?php endforeach; ?>
+                                <?php endif; ?>
+                        	</select>
+                        </div>
 							<div class="col-md-12 col-sm-12 form-group">
 								<div class="text-center">
 									<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Ajouter cet ami</span></button>
@@ -126,7 +163,17 @@
 												<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
 												<input type="hidden" name="auth_token" value="<?php echo $auth_token; ?>">
 												<input type="hidden" name="request_id" value="<?php echo htmlspecialchars($invitation->asc_id); ?>">
-												<button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter</span></button>
+												<div class="form-box">
+                                            		<div class="default-form contact-form">
+                                        				<div class="row clearfix">
+                                                			<div class="col-md-12 col-sm-12 form-group">
+                                                				<div class="text-center">
+                												    <button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="btn-title">Accepter</span></button>
+                												</div>
+                											</div>
+                                                		</div>
+                                                	</div>
+                                                </div>
 											</form>
 										</div>
 									</div>
@@ -143,7 +190,17 @@
 
     </div>
 </section>
-
+		<div class="form-box">
+    		<div class="default-form contact-form">
+				<div class="row clearfix">
+        			<div class="col-md-12 col-sm-12 form-group">
+        				<div class="text-center">
+        					<button class="theme-btn btn-style-one" id="init-button" type="submit" name="submit-form"><span class="btn-title">Initialiser</span></button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+        </div>
 <?php
 	// on inclu le fichier footer.php
     require_once('includes/footer.php');
