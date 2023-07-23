@@ -1,8 +1,8 @@
 <?php
 	// on inclu le fichier entete.php
     require_once('includes/entete.php');
-
-    // Récupère le numéro de page depuis l'URL, ou utilise la valeur par défaut 1
+    
+    $user_id = $_COOKIE['user_id'];
     $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
     // Récupère les parties depuis l'API
@@ -86,20 +86,22 @@
                                             }
                                         }
                                         
-                                        if ($isUserInParty) {
-                                            ?>
-                                            <a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>" class="link-btn">
-                                                <span class="btn-title">Accéder à la partie</span>
-                                            </a>
-                                            <?php
-                                        } else {
-                                            ?>
-                                            <a href="controllers/join_party.php?party_id=<?php echo htmlspecialchars($party->id); ?>&user_id=<?php echo $_COOKIE['user_id']; ?>" class="link-btn">
-                                                <span class="btn-title">Rejoindre la partie</span>
-                                            </a>
-                                            <?php
+                                        if($user_id != null){
+                                                if ($isUserInParty) {
+                                                ?>
+                                                <a href="infos_partie.php?party_id=<?php echo htmlspecialchars($party->id); ?>" class="link-btn">
+                                                    <span class="btn-title">Accéder à la partie</span>
+                                                </a>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <a href="controllers/join_party.php?party_id=<?php echo htmlspecialchars($party->id); ?>&user_id=<?php echo $_COOKIE['user_id']; ?>" class="link-btn">
+                                                    <span class="btn-title">Rejoindre la partie</span>
+                                                </a>
+                                                <?php
+                                            }
                                         }
-                                        ?>
+                                    ?>
                                     </div>
                     	        </div>
 							<div class="lower-content">
