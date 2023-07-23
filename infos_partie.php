@@ -444,7 +444,7 @@ svg *:not(rect) {
 				<div class="row clearfix">
         			<div class="col-md-12 col-sm-12 form-group">
         				<div class="text-center">
-        					<button class="theme-btn btn-style-one" id="init-button" type="submit" name="submit-form"><span class="btn-title">Initialiser le jeu</span></button>
+        					<button class="theme-btn btn-style-one" id="init-button" type="submit" name="submit-form"><span class="btn-title">Initialiser</span></button>
         				</div>
         			</div>
         		</div>
@@ -454,6 +454,17 @@ svg *:not(rect) {
             <center><div id="game-container">
                 </div>
             </center>
+            <div class="form-box">
+        		<div class="default-form contact-form">
+    				<div class="row clearfix">
+            			<div class="col-md-12 col-sm-12 form-group">
+            				<div class="text-center">
+            					<button class="theme-btn btn-style-one" id="delete-button" type="submit" name="submit-form"><span class="btn-title">Retour en arrière</span></button>
+            				</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
         </div>
     </section>
     
@@ -466,6 +477,8 @@ svg *:not(rect) {
         var maxPlayers = <?php echo $party_data->max_player; ?>;
         var gameContainer = document.getElementById('game-container');
         var gameOver = false;
+        let deleteButton = document.querySelector('#delete-button');
+        deleteButton.style.display = 'none';
     
         gameSocket.onopen = function(e) {
             console.log("Connexion avec le serveur de jeu ouverte");
@@ -479,6 +492,9 @@ svg *:not(rect) {
                 handleErrors(data.errors);
             }
             else {
+                deleteButton.style.display = 'block';
+                deleteButton.style.margin = '0 auto';
+                deleteButton.style.display = 'table';
                 updateGame(data);
             }
         };
@@ -519,6 +535,9 @@ svg *:not(rect) {
     
         document.querySelector('#init-button').onclick = function(e) {
             
+            deleteButton.style.display = 'block';
+            deleteButton.style.margin = '0 auto';
+            deleteButton.style.display = 'table';
             // Préparation de l'objet init
             let initObject = {
                 'players': maxPlayers
@@ -532,6 +551,13 @@ svg *:not(rect) {
         
             gameSocket.send(JSON.stringify({
                 'init': initObject
+            }));
+        };
+        
+        document.querySelector('#delete-button').onclick = function(e) {
+            document.querySelector('#delete-button').style.display = 'none';
+            gameSocket.send(JSON.stringify({
+                'delete': 'coucou'
             }));
         };
     
