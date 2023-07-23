@@ -190,17 +190,6 @@
 
     </div>
 </section>
-		<div class="form-box">
-    		<div class="default-form contact-form">
-				<div class="row clearfix">
-        			<div class="col-md-12 col-sm-12 form-group">
-        				<div class="text-center">
-        					<button class="theme-btn btn-style-one" id="init-button" type="submit" name="submit-form"><span class="btn-title">Initialiser</span></button>
-        				</div>
-        			</div>
-        		</div>
-        	</div>
-        </div>
 <?php
 	// on inclu le fichier footer.php
     require_once('includes/footer.php');
