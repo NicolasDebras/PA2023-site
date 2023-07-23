@@ -786,7 +786,7 @@ svg *:not(rect) {
 	<section class="contact-section">
 		<div class="container py-5">
 			<div class="row justify-content-center">
-				<div class="col-lg-4">
+				<div class="col-lg-7">
 					<div class="card">
 						<div class="card-header bg-primary text-white">
 							<h4 class="card-title mb-0 text-center">Chat</h4>
@@ -951,6 +951,42 @@ svg *:not(rect) {
 			messageInputDom.value = '';
 		};
 	</script>
+	
+    <section class="contact-section">
+        <div class="auto-container">
+            <div class="sec-title centered"><h2>Classement</h2><span class="bottom-curve"></span></div>
+    
+            <?php 
+            $participants = $party_data->accepting_participants;
+            usort($participants, function($a, $b) {
+                return $b->point <=> $a->point;
+            });
+            // on a limité à 10 participants car sinon le tableau risquerait d'êtrte trop grand
+            $top10 = array_slice($participants, 0, 10);
+            ?>
+    
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="color: white;">#</th>
+                        <th scope="col" style="color: white;">Photo de profil</th>
+                        <th scope="col" style="color: white;">Nom</th>
+                        <th scope="col" style="color: white;">Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($top10 as $index => $participant): ?>
+                        <tr>
+                            <th scope="row" style="color: white;"><?php echo $index + 1; ?></th>
+                            <td><img src="<?php echo $participant->player->url_image; ?>" style="width: 50px; height: 50px;"></td>
+                            <td style="color: white;"><?php echo $participant->player->username; ?></td>
+                            <td style="color: white;"><?php echo $participant->point !== null ? $participant->point : '0'; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
 	
 <?php
 	// on inclu le fichier footer.php
