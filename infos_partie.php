@@ -131,6 +131,7 @@
     }
     echo '<script>var gameData = ' . json_encode($party_data) . ';</script>';
 
+
 ?>
 <style>
 svg *:not(rect) {
@@ -487,6 +488,8 @@ svg *:not(rect) {
         var gameOver = false;
         let deleteButton = document.querySelector('#delete-button');
         deleteButton.style.display = 'none';
+        let verif = false;
+        var clickZone = 0;
     
         gameSocket.onopen = function(e) {
             console.log("Connexion avec le serveur de jeu ouverte");
@@ -526,7 +529,7 @@ svg *:not(rect) {
                         alert("Action inattendue par le joueur : " + error.player + ". Action donnée : " + JSON.stringify(error.action));
                         break;
                     case 'MISSING_ACTION':
-                        alert("Il manque l'action du joueur : " + error.player + ". Action demandée à l'autre joueur  : " + JSON.stringify(error.requested_action));
+                        alert("Il manque l'action du joueur : " + error.player);
                         break;
                     case 'WRONG_ACTION':
                         alert("Erreur sur l'action du joueur : " + error.player + ". Eerreur : " + error.subtype + ". Action donnée : " + JSON.stringify(error.action) + ". Action demandée au joueur : " + JSON.stringify(error.requested_action));
@@ -540,28 +543,29 @@ svg *:not(rect) {
         gameSocket.onclose = function(e) {
             console.error('Connexion avec le serveur de jeu fermée inopinément');
         };
-    
-        document.querySelector('#init-button').onclick = function(e) {
+        <?php if ($user_id == $party_data->Founder->id): ?>
+            document.querySelector('#init-button').onclick = function(e) {
+                
+                deleteButton.style.display = 'block';
+                deleteButton.style.margin = '0 auto';
+                deleteButton.style.display = 'table';
+                // Préparation de l'objet init
+                let initObject = {
+                    'players': maxPlayers
+                };
+                
+                if (gameData.fk_game_argument && gameData.fk_game_argument.length > 0) {
+                    gameData.fk_game_argument.forEach(argument => {
+                        initObject[argument.name] = argument.value;
+                    });
+                }
             
-            deleteButton.style.display = 'block';
-            deleteButton.style.margin = '0 auto';
-            deleteButton.style.display = 'table';
-            // Préparation de l'objet init
-            let initObject = {
-                'players': maxPlayers
+                gameSocket.send(JSON.stringify({
+                    'init': initObject
+                }));
             };
+        <?php endif; ?>
             
-            if (gameData.fk_game_argument && gameData.fk_game_argument.length > 0) {
-                gameData.fk_game_argument.forEach(argument => {
-                    initObject[argument.name] = argument.value;
-                });
-            }
-        
-            gameSocket.send(JSON.stringify({
-                'init': initObject
-            }));
-        };
-        
         document.querySelector('#delete-button').onclick = function(e) {
             document.querySelector('#delete-button').style.display = 'none';
             gameSocket.send(JSON.stringify({
@@ -570,48 +574,52 @@ svg *:not(rect) {
         };
     
     function updateGame(data) {
+        console.log(data.game_state.game_over);
         if (data.game_state.game_over) {
             if (typeof lastPlayer !== 'undefined') {
-                let party_data = <?php echo json_encode($party_data); ?>;
-                for(let participant of party_data.accepting_participants) {
-                    if(participant.tag_player === lastPlayer) {
-                        lastPlayerId = participant.id;
-                        break;
+                if(!verif){
+                    verif = true; // ca nous sert juste à éviter de spam l'ajout de sport et le spam de l'alert
+                    let party_data = <?php echo json_encode($party_data); ?>;
+                    for(let participant of party_data.accepting_participants) {
+                        if(participant.tag_player === lastPlayer) {
+                            lastPlayerId = participant.id;
+                            lastId = participant.player.id
+                            break;
+                        }
                     }
+                    console.log(lastId);
+                    console.log(userId);
+                    if(lastId == userId){
+                        $.ajax({
+                            url: 'controllers/add_point.php',
+                            type: 'POST',
+                            data: {
+                                playerId: lastPlayerId
+                            },
+                            error: function(error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    }
+    
+                    
+                    alert("Le joueur " + lastPlayer + " a gagné !");
+                    deleteButton.style.display = 'none';
+    
+                            
+                    document.cookie = "lastPlayer=" + lastPlayer;
                 }
-                
-                $.ajax({
-                    url: 'controllers/add_point.php',
-                    type: 'POST',
-                    data: {
-                        playerId: lastPlayerId
-                    },
-                    error: function(error) {
-                        console.error('Error:', error);
-                    }
-                });
-                
-                alert("Le joueur " + lastPlayer + " a gagné !");
-                deleteButton.style.display = 'none';
-
-                        
-                document.cookie = "lastPlayer=" + lastPlayer;
             } else {
                 deleteButton.style.display = 'none';
-                var lastPlayerCookie = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('lastPlayer='))
-                    .split('=')[1];
-                alert("Le joueur " + lastPlayerCookie + " a gagné !");
             }
             gameOver = true;
         } else {
             // on supprime le cookie de manière un peu tordu
             document.cookie = "lastPlayer= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
             gameOver = false;
+            verif = false;
+            clickZone = 0;
         }
-
-        //if (gameOver) return;
         
         while (gameContainer.firstChild) {
             gameContainer.removeChild(gameContainer.firstChild);
@@ -624,13 +632,16 @@ svg *:not(rect) {
                 playerElement.textContent = "Player " + (index + 1);
             
                 var boardElement = createGameBoard(display);
-                addClickZones(boardElement, data.requested_actions);
-                addKeyAndTextInputListeners(boardElement, data.requested_actions);
+                if (!gameOver){
+                    addClickZones(boardElement, data.requested_actions);
+                    addKeyAndTextInputListeners(boardElement, data.requested_actions);
+                }
                 playerElement.appendChild(boardElement);
             
                 gameContainer.appendChild(playerElement);
             }
         });
+        //if (gameOver) return;
     
         var gameStateElement = document.createElement('div');
         gameStateElement.textContent = "Game Over: " + data.game_state.game_over;
@@ -639,6 +650,8 @@ svg *:not(rect) {
         var scoresElement = document.createElement('div');
         scoresElement.textContent = "Scores: Joueur 1: " + data.game_state.scores.join(', Joueur 2: ');
         gameContainer.appendChild(scoresElement);
+        
+
         
         if (data.game_state.game_over == false) {
             if ('requested_actions' in data) {
@@ -706,6 +719,7 @@ svg *:not(rect) {
         requestedActions.forEach(action => {
             if (action.type === "CLICK") {
                 action.zones.forEach(zone => {
+                    clickZone++;
                     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     
                     rect.setAttribute("x", zone.x);
@@ -782,10 +796,14 @@ svg *:not(rect) {
         var toast = new bootstrap.Toast(toastElement, { delay: 4000 });
     
         requestedActions.forEach(action => {
-            if (action.player == <?php echo $user_tag; ?>) {
-                document.getElementById('turnText').textContent = "C'est à vous de jouer!";
-            } else {
-                document.getElementById('turnText').textContent = "C'est au joueur " + action.player + " de jouer";
+            if (clickZone === 0) {
+                document.getElementById('turnText').textContent = "C'est une égalité !";
+            } else{
+                if (action.player == <?php echo $user_tag; ?>) {
+                    document.getElementById('turnText').textContent = "C'est à vous de jouer!";
+                } else {
+                    document.getElementById('turnText').textContent = "C'est au joueur " + action.player + " de jouer";
+                }
             }
         });
     
