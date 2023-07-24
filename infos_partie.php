@@ -16,6 +16,7 @@
 	}
 
 
+
     $party_id = $_GET['party_id'];
 
     $curl = curl_init();
@@ -493,7 +494,7 @@ svg *:not(rect) {
     
         gameSocket.onmessage = function(e) {
             var data = JSON.parse(e.data);
-            //console.log("Message reçu du serveur de jeu :", data);
+            console.log("Message reçu du serveur de jeu :", data);
             
             if ('errors' in data) {
                 handleErrors(data.errors);
@@ -579,23 +580,24 @@ svg *:not(rect) {
                     }
                 }
                 
-                alert("Le joueur " + lastPlayer + " a gagné !");
-                
-                var myHeaders = new Headers();
-                myHeaders.append("Authorization", "Token " + "<?php echo $auth_token; ?>");
-                
-                fetch('https://api-pa2023.herokuapp.com/api/addpoint/55/' + lastPlayerId + '/', {
-                    method: 'PATCH',
-                    headers: myHeaders,
-                })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch((error) => {
-                    console.error('Error:', error);
+                $.ajax({
+                    url: 'controllers/add_point.php',
+                    type: 'POST',
+                    data: {
+                        playerId: lastPlayerId
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
                 });
+                
+                alert("Le joueur " + lastPlayer + " a gagné !");
+                deleteButton.style.display = 'none';
+
                         
                 document.cookie = "lastPlayer=" + lastPlayer;
             } else {
+                deleteButton.style.display = 'none';
                 var lastPlayerCookie = document.cookie
                     .split('; ')
                     .find(row => row.startsWith('lastPlayer='))
